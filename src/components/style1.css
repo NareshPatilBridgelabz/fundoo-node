@@ -1,0 +1,135 @@
+body {
+    background-image: url(https://previews.123rf.com/images/mazirama/mazirama1408/mazirama140800413/30659837-register-illustration-with-tablet-computer-on-blue-background.jpg);
+    background-size: 100% 100%;
+}
+
+.headmain {
+    text-align: center;
+    color: rgb(85, 219, 107);
+}
+
+.card_style {
+    height: -webkit-fill-available;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signup {
+    text-align: center;
+    color: rgb(76, 136, 27);
+}
+
+.link {
+    font-size: 20px;
+    position: relative;
+    left: 60px;
+    top: -40px;
+    right: -30px;
+    bottom: 70px;
+    color: darkblue;
+}
+
+.Register-button {
+    position: relative;
+    left: -20px;
+    top: 10px;
+    right: 50px;
+    bottom: 10px;
+}
+
+.fundoohead {
+    padding-left: 0%;
+    color: rgb(30, 210, 75);
+}
+
+button {
+    position: relative;
+    left: -30px;
+    top: 10px;
+    right: 102px;
+    bottom: 103px;
+}
+
+.mainReg {
+    /* background-image: url(https://images.wallpapersden.com/image/download/mix-colour-background_64813_3840x2160.jpg);
+    background-size: 120% 150%; */
+}
+
+.mainLogin {
+    margin-top: 7%;
+    margin-left: 27%;
+    margin-right: 27%;
+    margin-bottom: 30%;
+    boxShadow: "0px 0px 10px 2px";
+    display: "flex";
+    border: 5px solid rgb(0, 0, 0);
+    border-radius: 1em;
+    border-spacing: 1em;
+}
+
+.Register {
+    padding-top: 5px;
+    padding-left: 21%;
+    padding-right: 11%;
+    padding-bottom: 5px;
+}
+
+.Login {
+    padding-right: 0%;
+    padding-left: 0%;
+    padding-bottom: 10%;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+}
+
+.snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 1rem;
+}
+
+.snackbar.show {
+    visibility: visible;
+    /* Show the snackbar */
+    /* Add animation: Take 0.5 seconds to fade in and out the snackbar. 
+   However, delay the fade out process for 2.5 seconds */
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+.MuiSnackbarContent-action {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: -48px;
+    /* margin-top: -20px; */
+    margin-bottom: 15px;
+    padding-left: 16px;
+}
+
+.MuiAlert-root {
+    padding: 0px 16px;
+    padding-left: 38px;
+}
+.MuiSvgIcon-root {
+    padding-left: 34px;
+    padding-bottom: 15px;
+}
+.MuiSvgIcon-fontSizeInherit {
+    padding-top: 15px;
+}
