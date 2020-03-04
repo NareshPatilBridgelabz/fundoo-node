@@ -7,7 +7,7 @@ import Alert from '@material-ui/lab/Alert'
 
 import CloseIcon from '@material-ui/icons/Close'
 import TextField from '@material-ui/core/TextField'
-// import { registration } from '../controller/apiController'
+import { registration } from '../controller/apiController'
 import { Row, Col } from 'react-grid-system'
 import './style1.css'
 
@@ -69,40 +69,39 @@ class Registration extends Component {
       })
       console.log('requires same password')
     } else {
-      let formaData = new FormData()
-      formaData.append('fname', this.state.Firstname)
-      formaData.append('lname', this.state.Lastname)
-      formaData.append('email', this.state.Email)
-      formaData.append('password', this.state.Password)
-      formaData.append('c_password', this.state.Passwordagain)
-      console.log("Form Data  : "+formaData);
+      let formData = new FormData()
+      console.log("formaData in registration.jsx ");
+      console.log( formData);
+      formData.append('fname', 'hjk')
+      formData.append('lname', this.state.Lastname)
+      formData.append('email', this.state.Email)
+      formData.append('password', this.state.Password)
+      formData.append('c_password', this.state.Passwordagain)
+      
+      // for (var [key, value] of formData.entries()) { 
+      //   console.log(key, value);
+      //  }
 
-      // var registrationDetails = {
-      //   fname: this.state.Firstname,
-      //   lname: this.state.Lastname,
-      //   email: this.state.Email,
-      //   password: this.state.Password,
-      //   c_password: this.state.Passwordagain
-      // }
-      // console.log('Refistartion : ' + registrationDetails)
-      // registration(formaData)
-      //   .then(response => {
-      //     if (response.status === 200) {
-      //       this.setState({
-      //         snackbarOpen: true,
-      //         snackbarMessage: response.statusText
-      //       })
-      //       // this.props.history.push('/login')
-      //       setTimeout(() => {
-      //         this.props.history.push('/login')
-      //       }, 2000)
+      registration(formData)
+        .then(response => {
+          console.log("response");
+          console.log(response);
+          if (response.status === 200) {
+            this.setState({
+              snackbarOpen: true,
+              snackbarMessage: response.statusText
+            })
+            // this.props.history.push('/login')
+            setTimeout(() => {
+              this.props.history.push('/login')
+            }, 2000)
 
-      //       console.log('RESPONSE :', response)
-      //     } else {
-      //       console.log('fgtgybhbyunyuhnjunujuju')
-      //     }
-      //   })
-      //   .catch()
+            console.log('RESPONSE :', response)
+          } else {
+            console.log('fgtgybhbyunyuhnjunujuju')
+          }
+        })
+        .catch()
     }
   }
 
