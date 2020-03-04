@@ -109,9 +109,6 @@ class Registration extends Component {
 
   validate = data => {
     const errors = {}
-    
-    // if (data.Firstname === '') errors.firstname = 'fill the first name  '
-    // if (data.Lastname === '') errors.lastname = 'fill the last name   '
     if (!/([A-Z0-9a-z_-][^@])+?@[^$#<>?]+?\.[\w]{2,4}/.test(data.Email))
       errors.email = 'Invalid email'
 
