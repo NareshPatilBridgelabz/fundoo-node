@@ -7,7 +7,7 @@ import Alert from '@material-ui/lab/Alert'
 
 import CloseIcon from '@material-ui/icons/Close'
 import TextField from '@material-ui/core/TextField'
-import { registration } from '../controller/apiController'
+// import { registration } from '../controller/apiController'
 import { Row, Col } from 'react-grid-system'
 import './style1.css'
 
@@ -44,67 +44,66 @@ class Registration extends Component {
     const errors = this.validate(this.state)
     // alert('Submitted')
     console.log(errors)
-    if (errors.email)
+    console.log('PasswordAgain : ' + this.state.Email)
+    if (this.state.Firstname === '') {
+      console.log('firstname is empty')
+      this.setState({ snackbarOpen: true, snackbarMessage: 'Enter first name' })
+    } else if (this.state.Lastname === '') {
+      this.setState({ snackbarOpen: true, snackbarMessage: 'Enter last name' })
+      console.log('lastname is empty')
+    } else if (errors.email || this.state.Email === '') {
       this.setState({
         snackbarOpen: true,
         snackbarMessage: 'Enter propper email-ID.   '
       })
+    } else if (this.state.Password === '') {
+      this.setState({
+        snackbarOpen: true,
+        snackbarMessage: 'Enter correct password'
+      })
+      console.log('password is empty')
+    } else if (this.state.Passwordagain === '') {
+      this.setState({
+        snackbarOpen: true,
+        snackbarMessage: 'Enter same password'
+      })
+      console.log('requires same password')
+    } else {
+      let formaData = new FormData()
+      formaData.append('fname', this.state.Firstname)
+      formaData.append('lname', this.state.Lastname)
+      formaData.append('email', this.state.Email)
+      formaData.append('password', this.state.Password)
+      formaData.append('c_password', this.state.Passwordagain)
+      console.log("Form Data  : "+formaData);
 
-    if (this.state.Firstname === "") {
-    console.log("firstname is empty")
-    this.setState({ snackbarOpen: true, snackbarMessage: "Enter first name" })
-    } else if (this.state.Lastname === "") {
-    this.setState({ snackbarOpen: true, snackbarMessage: "Enter last name" })
-    console.log("lastname is empty")
-    }  else if (this.state.Password === "") {
-    this.setState({ snackbarOpen: true, snackbarMessage: "Enter correct password" })
-    console.log("password is empty")
-    } else if (this.state.confirmPassword === "") {
-    this.setState({ snackbarOpen: true, snackbarMessage: "Enter same password" })
-    console.log("requires same password")
+      // var registrationDetails = {
+      //   fname: this.state.Firstname,
+      //   lname: this.state.Lastname,
+      //   email: this.state.Email,
+      //   password: this.state.Password,
+      //   c_password: this.state.Passwordagain
+      // }
+      // console.log('Refistartion : ' + registrationDetails)
+      // registration(formaData)
+      //   .then(response => {
+      //     if (response.status === 200) {
+      //       this.setState({
+      //         snackbarOpen: true,
+      //         snackbarMessage: response.statusText
+      //       })
+      //       // this.props.history.push('/login')
+      //       setTimeout(() => {
+      //         this.props.history.push('/login')
+      //       }, 2000)
+
+      //       console.log('RESPONSE :', response)
+      //     } else {
+      //       console.log('fgtgybhbyunyuhnjunujuju')
+      //     }
+      //   })
+      //   .catch()
     }
-
-    else {
-        let formaData = new FormData()
-        formaData.append('fname', this.state.Firstname)
-        formaData.append('lname', this.state.Lastname)
-        formaData.append('email', this.state.Email)
-        formaData.append('password', this.state.Password)
-        formaData.append('c_password', this.state.Passwordagain)
-  
-  
-  
-        var registrationDetails = {
-  
-          fname: this.state.Firstname,
-          lname: this.state.Lastname,
-          email: this.state.Email,
-          password: this.state.Password,
-          c_password: this.state.Passwordagain
-
-        }
-        console.log(registrationDetails)
-        registration(formaData).then(response => {
-  
-          if (response.status === 200) {
-                     this.setState({ snackbarOpen: true, snackbarMessage: response.statusText })
-          // this.props.history.push('/login')
-          setTimeout(()=>{
-            this.props.history.push('/login')
-          },2000)
-           
-            console.log("RESPONSE :", response);
-          } else {
-            console.log("fgtgybhbyunyuhnjunujuju");
-          }
-        }
-        )
-          .catch(
-  
-          )
-  
-      }
-    
   }
 
   validate = data => {
@@ -129,7 +128,6 @@ class Registration extends Component {
   onchangeLastName = event => {
     if (/^[a-zA-Z]*$/.test(event.target.value)) {
       this.setState({ Lastname: event.target.value })
-      console.log(this.state)
     } else {
       this.setState({
         snackbarOpen: true,
@@ -139,40 +137,37 @@ class Registration extends Component {
   }
 
   onchangeEmail = event => {
-    if (
-      /([A-Z0-9a-z_-][^@])+?@[^$#<>?]+?\.[\w]{2,4}/.test(event.target.value)
-    ) {
       this.setState({ Email: event.target.value })
-    } else {
-      // this.setState({ snackbarOpen: true, snackbarMessage: "Enter proper email-ID.   "})
-    }
   }
 
   onchangePassword = event => {
-    if (event.target.value.match("^[A-Za-z0-9]*$") != null){
-    console.log("on click function is working", event.target.value)
-    this.setState({ Password: event.target.value });
+    if (event.target.value.match('^[A-Za-z0-9]*$') != null) {
+      // console.log("on click function is working", event.target.value)
+      this.setState({ Password: event.target.value })
+    } else {
+      // console.log("on click function is not working", event.target.value)
+      this.setState({
+        snackbarOpen: true,
+        snackbarMessage: 'enter correct password'
+      })
     }
-    else{
-      console.log("on click function is not working", event.target.value)
-      this.setState({ snackbarOpen: true, snackbarMessage: "enter correct password"})
-    }
-  };
+  }
 
-  onchangePasswordagain = async  (event) => {
+  onchangePasswordagain = async event => {
     await this.setState({
-      Passwordagain:event.target.value
-    })   
-    this.checkPassword();
-  };
+      Passwordagain: event.target.value
+    })
+    this.checkPassword()
+  }
 
-  checkPassword(){
-    if(this.state.Password===this.state.Passwordagain){
-      
-      this.setState({ snackbarOpen: true, snackbarMessage: "done"})
-    }
-    else{
-      this.setState({ snackbarOpen: true, snackbarMessage: "enter same password"})
+  checkPassword () {
+    if (this.state.Password === this.state.Passwordagain) {
+      this.setState({ snackbarOpen: true, snackbarMessage: 'done' })
+    } else {
+      this.setState({
+        snackbarOpen: true,
+        snackbarMessage: 'enter same password'
+      })
     }
   }
 
@@ -212,7 +207,7 @@ class Registration extends Component {
                 <div className='mainReg'>
                   <div maxWidth='5px' fixed>
                     <form className='Register' onSubmit={this.onSubmit}>
-                      <h1 className=''></h1>
+                      <h1 className=''> </h1>
 
                       <Snackbar
                         style={{
@@ -284,7 +279,7 @@ class Registration extends Component {
                           id='Email'
                           label='Email'
                           variant='outlined'
-                        //   value={this.state.Email}
+                          value={this.state.Email}
                           onChange={this.onchangeEmail}
                         />
                       </div>
