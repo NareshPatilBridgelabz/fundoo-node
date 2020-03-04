@@ -30,6 +30,7 @@ class Registration extends Component {
       Firstname: '',
       Lastname: '',
       Email: '',
+      Country: '',
       Password: '',
       Passwordagain: '',
       snackbarOpen: false,
@@ -56,6 +57,9 @@ class Registration extends Component {
         snackbarOpen: true,
         snackbarMessage: 'Enter propper email-ID.   '
       })
+    } else if (this.state.Country === '') {
+      this.setState({ snackbarOpen: true, snackbarMessage: 'Enter country ' })
+      console.log('lastname is empty')
     } else if (this.state.Password === '') {
       this.setState({
         snackbarOpen: true,
@@ -70,22 +74,31 @@ class Registration extends Component {
       console.log('requires same password')
     } else {
       let formData = new FormData()
-      console.log("formaData in registration.jsx ");
-      console.log( formData);
-      formData.append('fname', 'hjk')
-      formData.append('lname', this.state.Lastname)
+      console.log('formaData in registration.jsx ')
+      console.log(formData)
+      formData.append('firstName', this.state.Firstname)
+      formData.append('lastname', this.state.Lastname)
       formData.append('email', this.state.Email)
       formData.append('password', this.state.Password)
-      formData.append('c_password', this.state.Passwordagain)
-      
-      // for (var [key, value] of formData.entries()) { 
-      //   console.log(key, value);
-      //  }
+      formData.append('country', this.state.Country)
 
-      registration(formData)
+      for (var [key, value] of formData.entries()) {
+        console.log(key, value)
+      }
+
+      let sendData = {
+        firstName: this.state.Firstname,
+        lastName: this.state.Lastname,
+        email: this.state.Email,
+        password: this.state.Password,
+        country: this.state.Country
+      }
+      
+      console.log(JSON.stringify(sendData));
+      registration(sendData)
         .then(response => {
-          console.log("response");
-          console.log(response);
+          console.log('response')
+          console.log(response)
           if (response.status === 200) {
             this.setState({
               snackbarOpen: true,
@@ -136,7 +149,18 @@ class Registration extends Component {
   }
 
   onchangeEmail = event => {
-      this.setState({ Email: event.target.value })
+    this.setState({ Email: event.target.value })
+  }
+
+  onchangeCountry = event => {
+    if (/^[a-zA-Z]*$/.test(event.target.value)) {
+      this.setState({ Country: event.target.value })
+    } else {
+      this.setState({
+        snackbarOpen: true,
+        snackbarMessage: 'Enter only alphabets.   '
+      })
+    }
   }
 
   onchangePassword = event => {
@@ -213,7 +237,7 @@ class Registration extends Component {
                           backgroundColor: 'teal'
                         }}
                         anchorOrigin={{
-                          vertical: 'top',
+                          vertical: 'bottom',
                           horizontal: 'center'
                         }}
                         open={this.state.snackbarOpen}
@@ -251,6 +275,7 @@ class Registration extends Component {
                             id='Firstname'
                             label='Firstname'
                             variant='outlined'
+                            size='small'
                             value={this.state.Firstname}
                             onChange={this.onchangeFirstName}
                             className={classes.paper}
@@ -266,6 +291,7 @@ class Registration extends Component {
                           id='Lastname'
                           label='Lastname'
                           variant='outlined'
+                          size='small'
                           value={this.state.Lastname}
                           onChange={this.onchangeLastName}
                           className={classes.paper}
@@ -278,8 +304,22 @@ class Registration extends Component {
                           id='Email'
                           label='Email'
                           variant='outlined'
+                          size='small'
                           value={this.state.Email}
                           onChange={this.onchangeEmail}
+                        />
+                      </div>
+                      <br></br>
+
+                      <div>
+                        <TextField
+                          required={true}
+                          id='Country'
+                          label='Country'
+                          variant='outlined'
+                          size='small'
+                          value={this.state.Country}
+                          onChange={this.onchangeCountry}
                         />
                       </div>
                       <br></br>
@@ -293,6 +333,7 @@ class Registration extends Component {
                           label='Password'
                           type='password'
                           variant='outlined'
+                          size='small'
                           value={this.state.Password}
                           onChange={this.onchangePassword}
                           className={classes.paper}
@@ -309,6 +350,7 @@ class Registration extends Component {
                             label='Confirm Password'
                             type='password'
                             variant='outlined'
+                            size='small'
                             value={this.state.Passwordagain}
                             onChange={this.onchangePasswordagain}
                             className={classes.paper}
