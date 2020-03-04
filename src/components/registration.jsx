@@ -37,10 +37,7 @@ class Registration extends Component {
       snackbarMessage: ''
     }
   }
-  handleChange = e =>
-    this.setState({
-      data: { ...this.state.data, [e.target.id]: e.target.value }
-    })
+  
   onSubmit = () => {
     const errors = this.validate(this.state)
     // alert('Submitted')
@@ -73,19 +70,6 @@ class Registration extends Component {
       })
       console.log('requires same password')
     } else {
-      let formData = new FormData()
-      console.log('formaData in registration.jsx ')
-      console.log(formData)
-      formData.append('firstName', this.state.Firstname)
-      formData.append('lastname', this.state.Lastname)
-      formData.append('email', this.state.Email)
-      formData.append('password', this.state.Password)
-      formData.append('country', this.state.Country)
-
-      for (var [key, value] of formData.entries()) {
-        console.log(key, value)
-      }
-
       let sendData = {
         firstName: this.state.Firstname,
         lastName: this.state.Lastname,
@@ -102,12 +86,12 @@ class Registration extends Component {
           if (response.status === 200) {
             this.setState({
               snackbarOpen: true,
-              snackbarMessage: response.statusText
+              snackbarMessage: "Succefully Registered."
             })
             // this.props.history.push('/login')
-            setTimeout(() => {
-              this.props.history.push('/login')
-            }, 2000)
+            // setTimeout(() => {
+            //   this.props.history.push('/login')
+            // }, 2000)
 
             console.log('RESPONSE :', response)
           } else {
