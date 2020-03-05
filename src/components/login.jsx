@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import { Container, Card, Snackbar, IconButton } from '@material-ui/core'
+import { Container, Card, Snackbar, IconButton,MuiThemeProvider,createMuiTheme } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
 // import BodyImages from 'react-body-images'
 import CloseIcon from '@material-ui/icons/Close'
 import TextField from '@material-ui/core/TextField'
-import { registration } from '../controller/apiController'
 import { Row, Col } from 'react-grid-system'
+import { login } from '../services/userServices'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,7 +38,8 @@ class Login extends Component {
       Email: '',
       Password: '',
       snackbarOpen: false,
-      snackbarMessage: ''
+      snackbarMessage: '',
+      alertMsgType: 'error'
     }
   }
   handleChange = e =>
@@ -96,24 +97,29 @@ class Login extends Component {
       }
       
       console.log(JSON.stringify(sendData));
-      registration(sendData)
+      login(sendData)
         .then(response => {
-          console.log('response')
-          console.log(response)
-          if (response.status === 200) {
+          console.log("Responce : ");
+          console.log(response);
+          console.log(response.status);
+          if(response.status === 200){
+            this.state.alertMsgType = 'success'
             this.setState({
               snackbarOpen: true,
-              snackbarMessage: "Succefully Registered."
+              snackbarMessage: "Login Succesfully."              
             })
-            // this.props.history.push('/login')
+
             // setTimeout(() => {
             //   this.props.history.push('/login')
             // }, 2000)
-
-            console.log('RESPONSE :', response)
-          } else {
-            console.log('fgtgybhbyunyuhnjunujuju')
+          }else{
+            this.state.alertMsgType = 'error'
+            this.setState({
+              snackbarOpen: true,
+              snackbarMessage: "Enter correct credentials."
+            })
           }
+            
         })
         .catch()
     }
@@ -162,7 +168,7 @@ class Login extends Component {
       <div className='card_style' style={{
         
         backgroundImage:
-          'url(https://www.wallpaperup.com/uploads/wallpapers/2013/07/31/125720/dbd69902189b43062d45d1165907ead8-700.jpg)',
+          'url(https://news.hitb.org/sites/default/files/field/image/wallpaper-130611.jpg)',
         backgroundSize: '100% 100%'
       }}>
         <Container>
@@ -216,9 +222,9 @@ class Login extends Component {
                           </span>
                         }
                       >
-                        <Alert
+                        <Alert className='alertBox'
                           onClose={this.handleCloseSnackbar}
-                          severity='error'
+                          severity={this.state.alertMsgType}
                         >
                           {this.state.snackbarMessage}
                         </Alert>
