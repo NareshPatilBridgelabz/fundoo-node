@@ -7,9 +7,9 @@ import Alert from '@material-ui/lab/Alert'
 
 import CloseIcon from '@material-ui/icons/Close'
 import TextField from '@material-ui/core/TextField'
-import { registration } from '../controller/apiController'
+import { register } from '../services/userServices'
 import { Row, Col } from 'react-grid-system'
-import './style1.css'
+import '../assets/css/registration.css'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,11 +30,12 @@ class Registration extends Component {
       Firstname: '',
       Lastname: '',
       Email: '',
-      Country: '',
+      Phone: '',
       Password: '',
       Passwordagain: '',
       snackbarOpen: false,
-      snackbarMessage: ''
+      snackbarMessage: '',
+      alertMsgType:'error'
     }
   }
   
@@ -74,29 +75,23 @@ class Registration extends Component {
         firstName: this.state.Firstname,
         lastName: this.state.Lastname,
         email: this.state.Email,
+        service : 'advance',
         password: this.state.Password,
-        country: this.state.Country
+        phoneNumber: this.state.Phone
       }
       
       console.log(JSON.stringify(sendData));
-      registration(sendData)
+      register(sendData)
         .then(response => {
-          console.log('response')
-          console.log(response)
-          if (response.status === 200) {
+            this.state.alertMsgType = 'success'
             this.setState({
               snackbarOpen: true,
               snackbarMessage: "Succefully Registered."
             })
-            // this.props.history.push('/login')
-            // setTimeout(() => {
-            //   this.props.history.push('/login')
-            // }, 2000)
-
-            console.log('RESPONSE :', response)
-          } else {
-            console.log('fgtgybhbyunyuhnjunujuju')
-          }
+            setTimeout(() => {
+              this.loginPage();
+            }, 2000)
+            console.log('RESPONSE :', response);
         })
         .catch()
     }
@@ -105,8 +100,7 @@ class Registration extends Component {
   validate = data => {
     const errors = {}
     if (!/([A-Z0-9a-z_-][^@])+?@[^$#<>?]+?\.[\w]{2,4}/.test(data.Email))
-      errors.email = 'Invalid email'
-
+    errors.email = 'Invalid email'
     return errors
   }
 
@@ -136,13 +130,13 @@ class Registration extends Component {
     this.setState({ Email: event.target.value })
   }
 
-  onchangeCountry = event => {
-    if (/^[a-zA-Z]*$/.test(event.target.value)) {
-      this.setState({ Country: event.target.value })
+  onchangePhone = event => {
+    if (/^[0-9]*$/.test(event.target.value)) {
+      this.setState({ Phone: event.target.value })
     } else {
       this.setState({
         snackbarOpen: true,
-        snackbarMessage: 'Enter only alphabets.   '
+        snackbarMessage: 'Enter only numbers.   '
       })
     }
   }
@@ -188,11 +182,19 @@ class Registration extends Component {
   handleCloseSnackbar = () => {
     this.setState({ snackbarOpen: false })
   }
+  loginPage = () => {
+    this.props.history.push('/login')
+  }
   render () {
     const classes = { useStyles }
 
     return (
-      <div className='card_style'>
+      <div className='card_style' style={{
+        
+        backgroundImage:
+          'url(https://previews.123rf.com/images/mazirama/mazirama1408/mazirama140800413/30659837-register-illustration-with-tablet-computer-on-blue-background.jpg)',
+        backgroundSize: '100% 100%'
+      }}>
         <Container>
           <Row>
             <Col sm={8}>{/* One of three columns */}</Col>
@@ -217,25 +219,13 @@ class Registration extends Component {
                       <h1 className=''> </h1>
 
                       <Snackbar
-                        style={{
-                          backgroundColor: 'teal'
-                        }}
                         anchorOrigin={{
                           vertical: 'bottom',
                           horizontal: 'center'
                         }}
                         open={this.state.snackbarOpen}
-                        autoHideDuration={6000}
-                        onClose={this.snackbarOpen}
-                        action={
-                          <IconButton
-                            aria-label='close'
-                            color='inherit'
-                            onClick={this.handleCloseSnackbar}
-                          >
-                            <CloseIcon />
-                          </IconButton>
-                        }
+                        autoHideDuration={3000}
+                        onClose={() => this.setState({snackbarOpen: false})}
                         message={
                           <span id='message-id'>
                             {' '}
@@ -245,7 +235,7 @@ class Registration extends Component {
                       >
                         <Alert
                           onClose={this.handleCloseSnackbar}
-                          severity='error'
+                          severity={this.state.alertMsgType}
                         >
                           {this.state.snackbarMessage}
                         </Alert>
@@ -298,12 +288,12 @@ class Registration extends Component {
                       <div>
                         <TextField
                           required={true}
-                          id='Country'
-                          label='Country'
+                          id='Phone'
+                          label='Phone'
                           variant='outlined'
                           size='small'
-                          value={this.state.Country}
-                          onChange={this.onchangeCountry}
+                          value={this.state.Phone}
+                          onChange={this.onchangePhone}
                         />
                       </div>
                       <br></br>
