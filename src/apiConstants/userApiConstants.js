@@ -1,4 +1,5 @@
 module.exports = {
     singUp:"userSignUp",
-    login:"login"
+    login:"login",
+    dashboard:"dashBoard"
 }
