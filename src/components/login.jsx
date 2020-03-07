@@ -2,7 +2,15 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import { Container, Card, Snackbar, IconButton,MuiThemeProvider,createMuiTheme } from '@material-ui/core'
+import Link from '@material-ui/core/Link'
+import {
+  Container,
+  Card,
+  Snackbar,
+  IconButton,
+  MuiThemeProvider,
+  createMuiTheme
+} from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
 // import BodyImages from 'react-body-images'
 import CloseIcon from '@material-ui/icons/Close'
@@ -20,14 +28,12 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.secondary
   }
 }))
-const theme=createMuiTheme({
- overrides:{
-     MuiCard:{
-         root:{
-
-         }
-     }
- }
+const theme = createMuiTheme({
+  overrides: {
+    MuiCard: {
+      root: {}
+    }
+  }
 })
 
 class Login extends Component {
@@ -93,33 +99,33 @@ class Login extends Component {
 
       let sendData = {
         email: this.state.Email,
-        password: this.state.Password,
+        password: this.state.Password
       }
-      
-      console.log(JSON.stringify(sendData));
+
+      console.log(JSON.stringify(sendData))
       login(sendData)
         .then(response => {
-          console.log("Responce : ");
-          console.log(response);
-          console.log(response.status);
-          if(response.status === 200){
+          console.log('Responce : ')
+          console.log(response)
+          console.log(response.status)
+          if (response.status === 200) {
             this.state.alertMsgType = 'success'
             this.setState({
               snackbarOpen: true,
-              snackbarMessage: "Login Succesfully."              
+              snackbarMessage: 'Login Succesfully.'
             })
+            localStorage.setItem('token', response.data.id)
 
             // setTimeout(() => {
             //   this.props.history.push('/login')
             // }, 2000)
-          }else{
+          } else {
             this.state.alertMsgType = 'error'
             this.setState({
               snackbarOpen: true,
-              snackbarMessage: "Enter correct credentials."
+              snackbarMessage: 'Enter correct credentials.'
             })
           }
-            
         })
         .catch()
     }
@@ -150,7 +156,6 @@ class Login extends Component {
     }
   }
 
-
   SnackbarClose = e => {
     this.setState({ snackbarOpen: false })
   }
@@ -161,127 +166,158 @@ class Login extends Component {
   handleCloseSnackbar = () => {
     this.setState({ snackbarOpen: false })
   }
+  onClickForgotPwd = () => {
+    this.props.history.push('./registration')
+  }
+
   render () {
     const classes = { useStyles }
 
     return (
-      <div className='card_style' style={{
-        
-        backgroundImage:
-          'url(https://news.hitb.org/sites/default/files/field/image/wallpaper-130611.jpg)',
-        backgroundSize: '100% 100%'
-      }}>
+      <div
+        className='card_style'
+        style={{
+          backgroundImage:
+            'url(https://image.freepik.com/free-photo/table-made-with-planks_1253-2.jpg)',
+          backgroundSize: '100% 100%'
+        }}
+      >
         <Container>
           <Row>
-            <Col sm={8}>{/* One of three columns */}</Col>
+            <Col sm={4}>{/* One of three columns */}</Col>
             <Col sm={4}>
-            <MuiThemeProvider theme={theme}>
-              <Card
-                style={{
-                  display: 'flex',
-                  justifyContent: 'left-center',
-                  flexDirection: 'column',
-                  height: '68vh',
-                  boxShadow: '0px 0px 10px 2px',
-                  marginTop: '100px',
-                  paddingBottom: '10px',
-                  backgroundImage:
-                    'url(https://cdn.hipwallpaper.com/i/10/69/yrxv7k.png)',
-                  backgroundSize: '120% 120%'
-                }}
-              >
-                <div className='mainReg'>
-                  <div maxWidth='5px' fixed>
-                    <form className='Register' onSubmit={this.onSubmit}>
-                      <h1 className='' > Login page </h1>
+              <MuiThemeProvider theme={theme}>
+                <Card
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'left-center',
+                    flexDirection: 'column',
+                    height: '50vh',
+                    boxShadow: '0px 0px 10px 2px',
+                    marginTop: '100px',
+                    paddingBottom: '10px',
+                    // backgroundImage:
+                    //   'url(https://cdn.hipwallpaper.com/i/10/69/yrxv7k.png)',
+                    backgroundSize: '120% 120%'
+                  }}
+                >
+                  <div className='mainReg'>
+                    <div maxWidth='5px' fixed>
+                      <form className='formApi' onSubmit={this.onSubmit}>
+                        <h1 style = {{
+                          paddingLeft: '30px'
+                        }}> Login page </h1>
 
-                      <Snackbar
-                        style={{
-                          backgroundColor: 'teal'
-                        }}
-                        anchorOrigin={{
-                          vertical: 'bottom',
-                          horizontal: 'center'
-                        }}
-                        open={this.state.snackbarOpen}
-                        autoHideDuration={6000}
-                        onClose={this.snackbarOpen}
-                        action={
-                          <IconButton
-                            aria-label='close'
-                            color='inherit'
-                            onClick={this.handleCloseSnackbar}
-                          >
-                            <CloseIcon />
-                          </IconButton>
-                        }
-                        message={
-                          <span id='message-id'>
-                            {' '}
-                            {this.state.snackbarMessage}{' '}
-                          </span>
-                        }
-                      >
-                        <Alert className='alertBox'
-                          onClose={this.handleCloseSnackbar}
-                          severity={this.state.alertMsgType}
+                        <Snackbar
+                          style={{
+                            backgroundColor: 'teal'
+                          }}
+                          anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'center'
+                          }}
+                          open={this.state.snackbarOpen}
+                          autoHideDuration={6000}
+                          onClose={this.snackbarOpen}
+                          action={
+                            <IconButton
+                              aria-label='close'
+                              color='inherit'
+                              onClick={this.handleCloseSnackbar}
+                            >
+                              <CloseIcon />
+                            </IconButton>
+                          }
+                          message={
+                            <span id='message-id'>
+                              {' '}
+                              {this.state.snackbarMessage}{' '}
+                            </span>
+                          }
                         >
-                          {this.state.snackbarMessage}
-                        </Alert>
-                      </Snackbar>
-
-                      
-                      <div>
-                        <TextField
-                          required={true}
-                          id='Email'
-                          label='Email'
-                          variant='outlined'
-                          size='small'
-                          value={this.state.Email}
-                          onChange={this.onchangeEmail}
-                        />
-                      </div>
-                      <br></br>
-
-                      <div>
-                        <TextField
-                          required={true}
-                          error={this.state.error}
-                          id='Password'
-                          label='Password'
-                          type='password'
-                          variant='outlined'
-                          size='small'
-                          value={this.state.Password}
-                          onChange={this.onchangePassword}
-                          className={classes.paper}
-                        />
-                      </div>
-                      <br></br>
-
-                      <div className='row'>
-                        <div className='col s6 Reg-button'>
-                          <Button
-                            variant='outlined'
-                            size='medium'
-                            color='primary'
-                            className={classes.paper}
-                            style={{
-                              color: 'blue',
-                              margin: '10px'
-                            }}
-                            onClick={this.onSubmit}
+                          <Alert
+                            className='alertBox'
+                            onClose={this.handleCloseSnackbar}
+                            severity={this.state.alertMsgType}
                           >
-                            Submit
-                          </Button>
+                            {this.state.snackbarMessage}
+                          </Alert>
+                        </Snackbar>
+
+                        <div>
+                          <TextField
+                            required={true}
+                            id='Email'
+                            label='Email'
+                            variant='outlined'
+                            size='small'
+                            value={this.state.Email}
+                            onChange={this.onchangeEmail}
+                          />
                         </div>
-                        
+                        <br></br>
+
+                        <div>
+                          <TextField
+                            required={true}
+                            error={this.state.error}
+                            id='Password'
+                            label='Password'
+                            type='password'
+                            variant='outlined'
+                            size='small'
+                            value={this.state.Password}
+                            onChange={this.onchangePassword}
+                            className={classes.paper}
+                          />
+                        </div>
+                        <br></br>
+
+                        <div className='row'>
+                          <div className='col s6 Reg-button'>
+                            <Button
+                              variant='outlined'
+                              size='medium'
+                              color='primary'
+                              className={classes.paper}
+                              style={{
+                                color: 'blue',
+                                margin: '10px'
+                              }}
+                              onClick={this.onSubmit}
+                            >
+                              Submit
+                            </Button>
+                          </div>
+                        </div>
+                      </form>
+                      <div className='cardBottom'>
+                        <Link
+                          id='forgotPwdLink'
+                          component='button'
+                          variant='body2'
+                          style={{
+                            fontWeight:'bold'
+                          }}
+                          onClick={this.onClickForgotPwd}
+                        >
+                          forgot password
+                        </Link>
+                        <br />
+                        <Link
+                          component='button'
+                          variant='body2'
+                          style={{
+                            fontWeight:'bold'
+                          }}
+                          onClick={this.onClickForgotPwd}
+                        >
+                          register now
+                        </Link>
                       </div>
-                    </form>
+                    </div>
                   </div>
-                </div>
-              </Card>
+                </Card>
               </MuiThemeProvider>
             </Col>
           </Row>
