@@ -201,7 +201,9 @@ class Login extends Component {
                   <div className='mainReg'>
                     <div maxWidth='5px' fixed>
                       <form className='formApi' onSubmit={this.onSubmit}>
-                        <h1 > Login page </h1>
+                        <h1 style = {{
+                          paddingLeft: '30px'
+                        }}> Login page </h1>
 
                         <Snackbar
                           style={{
