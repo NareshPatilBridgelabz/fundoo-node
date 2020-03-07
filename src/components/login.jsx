@@ -195,7 +195,7 @@ class Login extends Component {
                     height: '50vh',
                     boxShadow: '0px 0px 10px 2px',
                     marginTop: '100px',
-                    backgroundSize: '120% 120%'
+                    paddingBottom: '10px'
                   }}
                 >
                   <div className='mainReg'>
