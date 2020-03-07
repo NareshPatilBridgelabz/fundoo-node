@@ -116,9 +116,9 @@ class Login extends Component {
             })
             localStorage.setItem('token', response.data.id)
 
-            // setTimeout(() => {
-            //   this.props.history.push('/login')
-            // }, 2000)
+            setTimeout(() => {
+              this.props.history.push('/home')
+            }, 2000)
           } else {
             this.state.alertMsgType = 'error'
             this.setState({
@@ -166,7 +166,10 @@ class Login extends Component {
   handleCloseSnackbar = () => {
     this.setState({ snackbarOpen: false })
   }
-  onClickForgotPwd = () => {
+  forgotPasswordPage = () => {
+    this.props.history.push('./forgotpassword')
+  }
+  registerPage = () => {
     this.props.history.push('./registration')
   }
 
@@ -296,7 +299,7 @@ class Login extends Component {
                           style={{
                             fontWeight:'bold'
                           }}
-                          onClick={this.onClickForgotPwd}
+                          onClick={this.forgotPasswordPage}
                         >
                           forgot password
                         </Link>
@@ -307,7 +310,7 @@ class Login extends Component {
                           style={{
                             fontWeight:'bold'
                           }}
-                          onClick={this.onClickForgotPwd}
+                          onClick={this.registerPage}
                         >
                           register now
                         </Link>
