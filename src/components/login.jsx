@@ -195,8 +195,6 @@ class Login extends Component {
                     height: '50vh',
                     boxShadow: '0px 0px 10px 2px',
                     marginTop: '100px',
-                    // backgroundImage:
-                    //   'url(https://cdn.hipwallpaper.com/i/10/69/yrxv7k.png)',
                     backgroundSize: '120% 120%'
                   }}
                 >
