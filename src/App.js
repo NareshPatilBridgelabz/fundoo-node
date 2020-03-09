@@ -5,9 +5,10 @@ import { Switch } from 'react-router-dom'
 
 import Registration from './components/registration'
 import Login from './components/login'
-import Dashboard from './components/home'
+import Dashboard from './components/dashboard'
 import Test from './components/test'
 import ForgotPassword from './components/forgotPassword'
+import Test2 from './components/text2'
 
 class App extends React.Component {
   render () {
@@ -16,9 +17,10 @@ class App extends React.Component {
         <Switch>
           <Route path='/registration' component={Registration} />
           <Route path='/login' component={Login} />
-          <Route path='/home' component={Dashboard} />
+          <Route path='/dashboard' component={Dashboard} />
           <Route path='/test' component={Test} />
           <Route path='/forgotpassword' component={ForgotPassword} />
+          {/* <Route path="/" exact component={Test2} /> */}
         </Switch>
       </Router>
     )

@@ -50,3 +50,60 @@
   box-shadow: 0px 0px 0px 0px;
   background-color: lightgray;
 }
+
+/* .header-main{
+  width: 100%;
+  height: auto;
+  box-shadow: 11px 1px 10px 0px;
+  display: flex;
+}
+.header-main > div{
+  height: 120%;
+  box-sizing: border-box;
+}
+.header-left{
+  width: 20%;
+}
+.header-left > *{
+  padding-left: 20px;
+}
+.search-box{
+  width: 40%;
+}
+.header-right{
+  margin: 20px;
+}
+.header-options{
+  width: 30%;
+} */
+.appbar_decor{
+  height: 9vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  border-bottom: 1px solid lightgray;
+}
+.image_icon{
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.image_icon > * {
+  /* width: 20%; */
+  padding-left: 20px;
+}
+#header_card{
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 7vh;
+}
+.final_icon{
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}

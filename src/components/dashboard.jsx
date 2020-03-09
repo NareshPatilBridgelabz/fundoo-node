@@ -15,12 +15,12 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import Appbar from './appBar'
-
-class Home extends Component {
+// import Appbar from './appBar'
+import AcUnitIcon from '@material-ui/icons/AcUnit';
+import Header from './dashbord/header'
+class Dashboard extends Component {
     constructor (props) {
       super(props)
-  
       this.state = {
         
       }
@@ -29,10 +29,10 @@ class Home extends Component {
     render () {
       return (
         <div>
-            <Appbar />
+            <Header />
         </div>
       )
     }
   }
 
-  export default withRouter(Home)
+  export default withRouter(Dashboard)
