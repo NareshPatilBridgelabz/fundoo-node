@@ -55,8 +55,71 @@ class Dashboard extends Component {
   render () {
     return (
       <div>
-       
-      </div>
+        <div className='headerbar'>
+          <div className='header_left'>
+            <IconButton onClick={this.sidebarActive}>
+              <MenuIcon />
+            </IconButton>
+            <img src='https://www.gstatic.com/images/branding/product/1x/keep_48dp.png' />
+          </div>
+          <div className='searchBox'>
+            <Card id='searchbar'>
+              <Tooltip title='search'>
+                <IconButton>
+                  <SearchIcon />
+                </IconButton>
+              </Tooltip>
+              <InputBase placeholder='Search' fullWidth />
+            </Card>
+          </div>
+          <div>
+            <IconButton>
+              <RefreshIcon />
+            </IconButton>
+            <IconButton>
+              <ListAltIcon />
+            </IconButton>
+            <IconButton>
+              <SettingsIcon />
+            </IconButton>
+          </div>
+          <div>
+            <div className='header_userProfile'>
+              <IconButton>
+                <DialpadIcon />
+              </IconButton>
+              <Button
+                variant='contained'
+                color='primary'
+                onClick={this.handleClick}
+                size='small'
+              >
+                Profile
+              </Button>
+            </div>
+            <Menu
+              id='profile-menu'
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left'
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right'
+              }}
+              anchorEl={this.state.menuAnchor}
+              keepMounted
+              open={this.state.menuOpen}
+              onClose={this.handleClose}
+            >
+              <MenuItem>Profile</MenuItem>
+              <MenuItem>My account</MenuItem>
+              <MenuItem>Logout</MenuItem>
+            </Menu>
+          </div>
+        </div>
+
+        </div>
     )
   }
 }
