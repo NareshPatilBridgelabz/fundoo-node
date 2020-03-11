@@ -9,11 +9,7 @@
   width: 15%;
   /* border-bottom: 1px solid black; */
 }
-#searchbar{
-  display: flex;
-  align-items: center;
-  margin: 4px;
-}
+
 .searchBox{
   width: 50%;
   margin-right: 10px ;
