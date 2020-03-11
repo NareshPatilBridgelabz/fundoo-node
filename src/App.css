@@ -1,109 +1,54 @@
-@import "./assets/css/registration.css";
-.App {
-  text-align: center;
-}
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.headerbar{
+  background-color: gainsboro;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
+  height: 10vh
 
-.App-link {
-  color: #61dafb;
+}.headerbar > *{
+  width: 15%;
+  /* border-bottom: 1px solid black; */
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#searchbar{
+  display: flex;
+  align-items: center;
+  margin: 4px;
 }
-
-.cardBottom {
+.searchBox{
+  width: 50%;
+  margin-right: 10px ;
+}
+.header_left{
+  display: flex;
+  width: 20%;
+}
+.header_userProfile{
   float: right;
-  padding-right: 20px;
-  font-weight: bold;
+  padding-right: 10px;
 }
-#appbar_card{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  box-shadow: 0px 0px 0px 0px;
-  background-color: lightgray;
+.sidebar{
+  margin-top: 5px;
+  /* background-color: grey; */
+  width: 20%;
+  height: 100%;
+  position: fixed;
+  transition: 1s;
 }
 
-/* .header-main{
-  width: 100%;
-  height: auto;
-  box-shadow: 11px 1px 10px 0px;
-  display: flex;
-}
-.header-main > div{
-  height: 120%;
-  box-sizing: border-box;
-}
-.header-left{
-  width: 20%;
-}
-.header-left > *{
-  padding-left: 20px;
-}
-.search-box{
-  width: 40%;
-}
-.header-right{
-  margin: 20px;
-}
-.header-options{
-  width: 30%;
-} */
-.appbar_decor{
-  height: 9vh;
-  width: 100%;
+.sidebar_component{
   display: flex;
   align-items: center;
-  flex-direction: row;
-  border-bottom: 1px solid lightgray;
+  cursor: pointer;
+  border-radius: 0px 30px 30px 0px;
+  height: 5vh; 
+  padding: 10px;
 }
-.image_icon{
-  width: 20%;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
+.sidebar_component > *{
+  padding-right: 30px;
 }
-.image_icon > * {
-  /* width: 20%; */
-  padding-left: 20px;
+.sidebar_component:hover {
+  background-color: rgb(223, 223, 223);
 }
-#header_card{
-  width: auto;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 7vh;
-}
-.final_icon{
-  width: 20%;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
+.sidebar_divider{
+  border-top: 3px solid green;
 }
