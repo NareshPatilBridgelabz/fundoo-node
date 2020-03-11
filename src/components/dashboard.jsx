@@ -119,7 +119,32 @@ class Dashboard extends Component {
           </div>
         </div>
 
+        <div
+          className='sidebar'
+          style={{
+            left: this.state.sidebarLeft
+          }}
+        >
+          <div class='sidebar_component' onClick={this.test}>
+            <WbIncandescentIcon />
+            Notes
+          </div>
+          <div class='sidebar_component' onClick={this.test}>
+            <NotificationsNoneIcon />
+            Reminder
+          </div>
+          <Divider 
+          />
+          <div class='sidebar_component' onClick={this.test}>
+            <EditIcon />
+            Edit Lable
+          </div>
+          <div class='sidebar_component' onClick={this.test}>
+            <ArchiveIcon />
+            Archive
+          </div>
         </div>
+      </div>
     )
   }
 }
