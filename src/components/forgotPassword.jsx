@@ -112,7 +112,7 @@ class Registration extends Component {
         <Container>
           <Row>
             <Col sm={4}>{/* One of three columns */}</Col>
-            <Col sm={4}>
+            <Col sm={4} style={{top:'90px'}}>
               <Card
                 style={{
                   display: 'flex',
@@ -155,7 +155,7 @@ class Registration extends Component {
                         </Alert>
                       </Snackbar>
 
-                      <div>
+                      <div style={{marginTop: '50px'}}>
                         <TextField
                           required={true}
                           id='Email'
