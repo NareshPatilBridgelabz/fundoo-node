@@ -9,14 +9,14 @@ import { register } from '../services/userServices'
 import { Row, Col } from 'react-grid-system'
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAling: 'center',
-    color: theme.palette.text.secondary
-  }
+  // root: {
+  //   flexGrow: 1
+  // },
+  // paper: {
+  //   padding: theme.spacing(2),
+  //   textAling: 'center',
+  //   color: theme.palette.text.secondary
+  // }
 }))
 
 class Registration extends Component {
@@ -190,12 +190,13 @@ class Registration extends Component {
         
         backgroundImage:
           'url(https://previews.123rf.com/images/mazirama/mazirama1408/mazirama140800413/30659837-register-illustration-with-tablet-computer-on-blue-background.jpg)',
-        backgroundSize: '100% 100%'
+          backgroundSize: '100% 100%'
+        
       }}>
         <Container>
           <Row>
             <Col sm={8}>{/* One of three columns */}</Col>
-            <Col sm={4}>
+            <Col sm={4} style={{top:'60px'}}>
               <Card
                 style={{
                   display: 'flex',
@@ -207,7 +208,7 @@ class Registration extends Component {
                   paddingBottom: '10px',
                   backgroundImage:
                     'url(https://images.wallpapersden.com/image/download/mix-colour-background_64813_3840x2160.jpg)',
-                  backgroundSize: '150% 150%'
+                  backgroundSize: '150% 150%',
                 }}
               >
                 <div className='mainReg'>
