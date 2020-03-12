@@ -8,7 +8,7 @@ import Login from './components/login'
 import Dashboard from './components/dashboard'
 import Test from './components/test'
 import ForgotPassword from './components/forgotPassword'
-import Test2 from './components/text2'
+import FundooServices from './components/fundooSevices'
 
 class App extends React.Component {
   render () {
@@ -20,7 +20,7 @@ class App extends React.Component {
           <Route path='/dashboard' component={Dashboard} />
           <Route path='/test' component={Test} />
           <Route path='/forgotpassword' component={ForgotPassword} />
-          {/* <Route path="/" exact component={Test2} /> */}
+          <Route path="/fundooServices" component={FundooServices} />
         </Switch>
       </Router>
     )
