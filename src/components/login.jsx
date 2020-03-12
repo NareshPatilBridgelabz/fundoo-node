@@ -188,7 +188,7 @@ class Login extends Component {
         <Container>
           <Row>
             <Col sm={4}>{/* One of three columns */}</Col>
-            <Col sm={4}>
+            <Col sm={4} style={{top:'50px'}}>
               <MuiThemeProvider theme={theme}>
                 <Card
                   style={{
