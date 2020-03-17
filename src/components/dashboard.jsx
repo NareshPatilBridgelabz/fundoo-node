@@ -51,6 +51,11 @@ class Dashboard extends Component {
   test = e => {
     console.log(e.currentTarget)
   }
+  handleLogout = () => {
+    localStorage.removeItem('token')
+    this.props.history.push('/login')
+
+  }
 
   render () {
     return (
@@ -114,7 +119,7 @@ class Dashboard extends Component {
             >
               <MenuItem>Profile</MenuItem>
               <MenuItem>My account</MenuItem>
-              <MenuItem>Logout</MenuItem>
+              <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
             </Menu>
           </div>
         </div>

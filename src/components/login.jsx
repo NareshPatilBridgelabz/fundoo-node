@@ -117,7 +117,7 @@ class Login extends Component {
             localStorage.setItem('token', response.data.id)
 
             setTimeout(() => {
-              this.props.history.push('/home')
+              this.props.history.push('/dashboard')
             }, 2000)
           } else {
             this.state.alertMsgType = 'error'
