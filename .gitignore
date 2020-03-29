@@ -24,6 +24,4 @@ yarn-error.log*
 
 .env
 .vscode
-package.json
 package-lock.json
-/src/assets
