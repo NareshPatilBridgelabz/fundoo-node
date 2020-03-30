@@ -9,11 +9,11 @@
   background-color: gainsboro;
   display: flex;
   align-items: center;
-  height: 10vh
+  justify-content: space-between;
 }
 
 .headerbar>* {
-  width: 15%;
+  width: auto;
   /* border-bottom: 1px solid black; */
 }
 
@@ -27,23 +27,39 @@
   width: 50%;
   margin-right: 10px;
 }
+.buttonBundle1{
+  display: flex;
+}
+.MuiButtonBase-root.searchButton2{
+  display: none;
+}
+
+@media screen and (max-width: 480px) {
+  .searchBox {display: none;}
+  .MuiIconButton-root.hideIcon{display: none;}
+  .searchButton2{
+    display: block;
+  }
+}
 
 .header_left {
   display: flex;
-  width: 20%;
 }
 
 .header_userProfile {
+  display: flex;
   float: right;
   padding-right: 10px;
+}
+#profile_logo{
+  height: 40px;
 }
 
 .sidebar {
   margin-top: 5px;
-  /* background-color: grey; */
+  background-color: grey;
   width: 20%;
-  height: 100%;
-  position: fixed;
+  position: absolute;
   transition: 1s;
 }
 
@@ -52,7 +68,6 @@
   align-items: center;
   cursor: pointer;
   border-radius: 0px 30px 30px 0px;
-  height: 5vh;
   padding: 10px;
 }
 
@@ -66,6 +81,14 @@
 
 .sidebar_divider {
   border-top: 3px solid green;
+}
+.dashboard_body{
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+}
+.dashboard_container{
+  transition: 1s;
 }
 
 .fundoo_header {
@@ -178,4 +201,30 @@ h2 {
 .cardBottom{
   float: right;
   margin-right: 10px;
+}
+.cardBottom > *{
+  margin: 10px;
+}
+
+/* notes */
+.cardRow{
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+}
+.cardRow > .MuiPaper-root{
+  width: 70%;
+}
+.cardActions{
+  display: flex;
+  width: 100%;
+}
+.card_buttonsLeft{
+  width: 50%  ;
+  display: flex;
+}
+.card_buttonsRight{
+  width: 50%  ;   
+  display: flex;
+  justify-content: flex-end;
 }
