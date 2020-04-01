@@ -114,8 +114,6 @@ class Login extends Component {
               snackbarOpen: true,
               snackbarMessage: 'Login Succesfully.'
             })
-            localStorage.setItem('token', response.data.id)
-
             setTimeout(() => {
               this.props.history.push('/dashboard')
             }, 2000)
