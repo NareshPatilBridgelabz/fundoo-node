@@ -13,6 +13,8 @@ export async function register(registerData){
 export async function login(loginData){
     try{
         const response = await axios.post(process.env.REACT_APP_BASE_URL + userApiConstants.login, loginData);
+        localStorage.setItem('token', response.data.id)
+        localStorage.setItem('userDetails', JSON.stringify(response.data))
         return response;
     } catch(err) {
         console.log(err);
