@@ -57,7 +57,7 @@
 
 .sidebar {
   margin-top: 5px;
-  background-color: grey;
+  /* background-color: grey; */
   width: 20%;
   position: absolute;
   transition: 1s;
@@ -77,6 +77,13 @@
 
 .sidebar_component:hover {
   background-color: rgb(223, 223, 223);
+}
+.sidebar_component .MuiSvgIcon-root{
+  color: gray;
+}
+.sidebar > *{
+  margin-bottom: 10px;
+  padding-left: 20px;
 }
 
 .sidebar_divider {
@@ -213,7 +220,8 @@ h2 {
   margin-top: 30px;
 }
 .cardRow > .MuiPaper-root{
-  width: 70%;
+  width: 50%;
+  box-shadow: 1px 1px 3px 1px;
 }
 .cardActions{
   display: flex;
@@ -227,4 +235,48 @@ h2 {
   width: 50%  ;   
   display: flex;
   justify-content: flex-end;
+}
+.reminderMenu .MuiButtonBase-root{
+  font-size: small;
+  margin-top: 5px;
+}
+.reminderMenu .MuiSvgIcon-root{
+  font-size: medium;
+  margin-right: 5px;
+}
+.notes{
+  display: flex;
+  justify-content: center;
+  align-items: flex-end ;
+  flex-flow: wrap;
+  margin-top: 30px;
+}
+.notes > * {
+  margin: 10px;
+  width: 30%;
+}
+#checkList{
+  float: right;
+}
+#datePickBox > * {
+  margin: 10px;
+  font-size: small;
+}
+#datePickBox .MuiInputBase-root {
+  font-size: small;
+}
+#datePickBox {
+  display: flex;
+  flex-direction: column;
+}
+.subCard_buttonsLeft{
+  width: 100%  ;
+  display: flex;
+  justify-content: space-evenly;
+}
+.subCard_buttonsLeft  .MuiSvgIcon-root{
+  font-size: medium;
+}
+.subNotesMoreMenu .MuiMenuItem-root{
+  font-size: small;
 }
