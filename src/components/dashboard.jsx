@@ -33,7 +33,6 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import TextField from '@material-ui/core/TextField';
 import {getUserNote} from '../services/noteServices'
 import {setUserNote} from '../services/noteServices'
-import {deleteUserNote} from '../services/noteServices'
 // import Appbar from './appBar'
 import AcUnitIcon from '@material-ui/icons/AcUnit'
 // import Header from './dashbord/header'
@@ -76,9 +75,7 @@ class Dashboard extends Component {
     }
 
     this.userNoteRefresh()
-    deleteUserNote().then(response => {
-      console.log(response)
-    })
+    
 
   }
   userNoteRefresh = () => {
@@ -428,12 +425,12 @@ class Dashboard extends Component {
                 .state
                 .allNotes
                 .map(objNote => {
-                  return (< Note noteData={objNote}/>)
+                  if(!objNote.isDeleted){ 
+                    return (< Note noteData={objNote} noteRefresh={this.userNoteRefresh}/>)
+                  }
                 })}
             </div>
-
           </div>
-
         </div>
       </div>
     )
