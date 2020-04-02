@@ -3,6 +3,12 @@ import IconButton from '@material-ui/core/IconButton'
 import InputBase from '@material-ui/core/InputBase'
 import {Menu, MenuItem} from '@material-ui/core'
 import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import {Card, Tooltip} from '@material-ui/core'
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -15,6 +21,9 @@ import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import AddAlertIcon from '@material-ui/icons/AddAlert';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
 import PlaceIcon from '@material-ui/icons/Place';
+import {deleteUserNote} from '../services/noteServices'
+import NoteDialogBox from './noteDialogBox'
+
 
 class Notes extends React.Component{
     constructor(props){
@@ -25,8 +34,13 @@ class Notes extends React.Component{
             MoreMenuAnchor: null,
             MoreMenuOpen: false,
             // noteData:props.noteData,
+            noteData:props.noteData,
             title:props.noteData.title,
-            description:props.noteData.description
+            description:props.noteData.description,
+            noteID:props.noteData.id,
+            noteRefresh:props.noteRefresh,
+            dialogBoxOpen:false
+            
         }
          
     }
@@ -42,12 +56,23 @@ class Notes extends React.Component{
           MoreMenuOpen: !this.state.MoreMenuOpen
         })
       }
-      onChangeTitle = (event)=>{
-        this.setState({title:event.currentTarget.value})
+      onClickTitle = (event)=>{
+        // this.setState({title:event.currentTarget.value})
+        this.handelNoteDialogBox()
       }
-      onChangeNote = (event)=>{
-        this.setState({note:event.currentTarget.value})
+      onClickNote = (event)=>{
+        // this.setState({description:event.currentTarget.value})
+        this.handelNoteDialogBox()
       }
+      noteDelete = () => {
+        deleteUserNote(this.state.noteID).then(response => {
+          // console.log(response)
+          this.state.noteRefresh()
+        })
+      }
+      handelNoteDialogBox = () => {
+        this.setState({dialogBoxOpen:!this.state.dialogBoxOpen})
+    }
 
     render(){
         return(
@@ -57,13 +82,13 @@ class Notes extends React.Component{
                   <Typography color="textSecondary">
                     <InputBase placeholder="Title"
                     value={this.state.title}
-                    onChange={this.onChangeTitle}/>
+                    onClick={this.onClickTitle}/>
                   </Typography>
                   <Typography >
                     <InputBase
                       placeholder="Take a note..."
                       value={this.state.description}
-                      onChange={this.onChangeNote}/>
+                      onClick={this.onClickNote}/>
                   </Typography>
 
                 </CardContent>
@@ -129,7 +154,7 @@ class Notes extends React.Component{
                         keepMounted
                         open={this.state.MoreMenuOpen}
                         onClose={this.moreMenuHandler}>
-                        <MenuItem>Delete</MenuItem>
+                        <MenuItem onClick={this.noteDelete}>Delete</MenuItem>
                         <MenuItem>Add Drawing</MenuItem>
                         <MenuItem>Show checkboxes</MenuItem>
                       </Menu>
@@ -142,6 +167,19 @@ class Notes extends React.Component{
                   </div>
                 </CardActions>
               </Card>
+
+              <div>
+              <Dialog open={this.state.dialogBoxOpen} onClose={this.handelNoteDialogBox} aria-labelledby="form-dialog-title">
+                
+                <DialogContent>
+                  <Notes noteData={this.state.noteData} noteRefresh={this.state.noteRefresh}/>
+                </DialogContent>
+                  {/* <Button onClick={this.handelNoteDialogBox} color="primary">
+                    Cancel
+                  </Button> */}
+              </Dialog>
+            </div>
+            
             </div>
         )
     }
