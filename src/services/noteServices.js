@@ -25,9 +25,9 @@ export async function setUserNote(noteData){
     }
 }
 
-export async function deleteUserNote(noteData){
+export async function deleteUserNote(noteID){
     try{
-        let noteData = {isDeleted: true, noteIdList: ["5e8439ffad53b700227c598a"]}
+        let noteData = {isDeleted: true, noteIdList: [noteID]}
         const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.deleteNote,noteData,{
             headers: {
                 Authorization:userData.id
