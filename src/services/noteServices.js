@@ -37,3 +37,40 @@ export async function deleteUserNote(noteID){
         throw err
     }
 }
+
+export async function updateUserNote(editData){
+    try{
+        const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.updateNotes,editData,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+
+export async function addUpdateReminderNote(addUpdateReminderdata){
+    try{
+        const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.addUpdateReminderNotes,addUpdateReminderdata,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+
+export async function removeReminderNote(noteID){
+    try{
+        let noteData = {noteIdList: [noteID]}
+        const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.removeReminderNotes,noteData,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
