@@ -247,7 +247,6 @@ h2 {
 .notes{
   display: flex;
   justify-content: center;
-  align-items: flex-end ;
   flex-flow: wrap;
   margin-top: 30px;
 }
@@ -279,4 +278,33 @@ h2 {
 }
 .subNotesMoreMenu .MuiMenuItem-root{
   font-size: small;
+}
+.MuiPaper-root.MuiDialog-paper{
+  width: 50%;
+}
+.buttonsLeftDialogBox{
+  width: 100%  ;
+  display: flex;
+  justify-content: space-evenly;
+}
+.notes .MuiCard-root.MuiPaper-elevation1{
+  box-shadow: 1px 1px 5px 0px;
+}
+.cardRow .MuiCardContent-root{
+  padding: 10px;
+}
+.reminderHeading{
+  font-size: medium;
+    margin-left: 10px;
+    font-weight: 500;
+}
+.addReminderMain{
+  display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size: small;
+    font-weight: 700;
+    width: 65%;
+    background-color: antiquewhite;
+    border-radius: 22px 22px 22px 22px;
 }
