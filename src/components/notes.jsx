@@ -22,166 +22,452 @@ import AddAlertIcon from '@material-ui/icons/AddAlert';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
 import PlaceIcon from '@material-ui/icons/Place';
 import {deleteUserNote} from '../services/noteServices'
+import {updateUserNote} from '../services/noteServices'
+import {addUpdateReminderNote} from '../services/noteServices'
+import {removeReminderNote} from '../services/noteServices'
 import NoteDialogBox from './noteDialogBox'
+import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms'
+import HighlightOffIcon from '@material-ui/icons/HighlightOff'
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-
-class Notes extends React.Component{
-    constructor(props){
-        super(props)
-        this.state = {
-            NoteReminderMenuAnchor: null,
-            NoteReminderMenuOpen: false,
-            MoreMenuAnchor: null,
-            MoreMenuOpen: false,
-            // noteData:props.noteData,
-            noteData:props.noteData,
-            title:props.noteData.title,
-            description:props.noteData.description,
-            noteID:props.noteData.id,
-            noteRefresh:props.noteRefresh,
-            dialogBoxOpen:false
-            
-        }
-         
+class Notes extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      NoteReminderMenuAnchor: null,
+      NoteReminderMenuOpen: false,
+      MoreMenuAnchor: null,
+      MoreMenuOpen: false,
+      // noteData:props.noteData,
+      noteData: props.noteData,
+      title: props.noteData.title,
+      description: props.noteData.description,
+      noteID: props.noteData.id,
+      noteRefresh: props.noteRefresh,
+      dialogBoxOpen: false,
+      reminderMsg:props.noteData.reminder[0]?props.noteData.reminder[0]:'',
+      reminderDisplay:props.noteData.reminder[0]?'flex':'none',
+      displayReminder: "",
+      displayDatePick: "none"
     }
-    remiderHandler = (event) => {
-        this.setState({
-          NoteReminderMenuAnchor: event.currentTarget,
-          NoteReminderMenuOpen: !this.state.NoteReminderMenuOpen
-        })
-      }
-      moreMenuHandler = (event) => {
-        this.setState({
-          MoreMenuAnchor: event.currentTarget,
-          MoreMenuOpen: !this.state.MoreMenuOpen
-        })
-      }
-      onClickTitle = (event)=>{
-        // this.setState({title:event.currentTarget.value})
-        this.handelNoteDialogBox()
-      }
-      onClickNote = (event)=>{
-        // this.setState({description:event.currentTarget.value})
-        this.handelNoteDialogBox()
-      }
-      noteDelete = () => {
-        deleteUserNote(this.state.noteID).then(response => {
-          // console.log(response)
-          this.state.noteRefresh()
-        })
-      }
-      handelNoteDialogBox = () => {
-        this.setState({dialogBoxOpen:!this.state.dialogBoxOpen})
+    console.log(props.noteData)
+  }
+  timing = [
+    {
+      value: 'morning8:00AM',
+      label: 'morning     8:00 AM'
+    }, {
+      value: 'afternoon1:00PM',
+      label: 'afternoon   1:00 PM'
+    }, {
+      value: 'evening4:00PM',
+      label: 'evening     4:00 PM'
+    }, {
+      value: 'night8:00PM',
+      label: 'night       8:00 PM'
     }
+  ]
+  remiderHandler = (event) => {
+    this.setState({
+      NoteReminderMenuAnchor: event.currentTarget,
+      NoteReminderMenuOpen: !this.state.NoteReminderMenuOpen
+    })
+  }
+  moreMenuHandler = (event) => {
+    this.setState({
+      MoreMenuAnchor: event.currentTarget,
+      MoreMenuOpen: !this.state.MoreMenuOpen
+    })
+  }
+  onClickTitle = (event) => {
+    // this.setState({title:event.currentTarget.value})
+    this.handelNoteDialogBox()
+  }
+  onClickNote = (event) => {
+    // this.setState({description:event.currentTarget.value})
+    this.handelNoteDialogBox()
+  }
+  noteDelete = () => {
+    deleteUserNote(this.state.noteID).then(response => {
+      // console.log(response)
+      this
+        .state
+        .noteRefresh()
+    })
+  }
+  handelNoteDialogBox = () => {
+    this.setState({
+      dialogBoxOpen: !this.state.dialogBoxOpen
+    })
+  }
+  onChangeTitle = (event) => {
+    this.setState({title:event.currentTarget.value})
+  }
+  onChangeDescription = (event) =>   {
+    this.setState({description:event.currentTarget.value})
+  }
+  updateNoteClick = () => {
+    let update_Data = new FormData();
+    update_Data.append('noteId',this.state.noteID)
+    update_Data.append('title',this.state.title)
+    update_Data.append('description',this.state.description)
+    updateUserNote(update_Data).then(response => {
+      console.log(response)
+    })
+    this.handelNoteDialogBox()
+    this.state.noteRefresh()
+  }
+  addUpdateReminder = (date) => {
+    // alert(this.state.reminderMsg)
+    let reminderData = {reminder: date, noteIdList: [this.state.noteID]}
+    addUpdateReminderNote(reminderData).then(response => {
+      console.log(response)
+    })
+  }
+  
+  onClickCheckList = () => {}
+  clickPickDate = () => {
+    this.setState({
+      displayReminder: this.state.displayReminder === ""
+        ? "none"
+        : ""
+    })
+    this.setState({
+      displayDatePick: this.state.displayDatePick === ""
+        ? "none"
+        : ""
+    })
+  }
+  handleChangeDate = (event) => {
+    this.setState({date: event.target.value})
+  }
+  setReminderOnclick = (event) => {
+    let time = ""
+    let date = new Date()
+    if(event.target.getAttribute('time')){
+      time = new Date(date.setDate(date.getDate() + parseInt(event.target.getAttribute('time')))).toString()
+    } else {
+      time = new Date(this.state.date).toString()
+    }
+    this.setState({reminderMsg:time})
+    this.setState({reminderDisplay:"flex"})
+    this.setState({reminderMenuOpen: !this.state.reminderMenuOpen})
 
-    render(){
-        return(
-            <div>
-              <Card >
-                <CardContent>
-                  <Typography color="textSecondary">
-                    <InputBase placeholder="Title"
-                    value={this.state.title}
-                    onClick={this.onClickTitle}/>
-                  </Typography>
-                  <Typography >
-                    <InputBase
-                      placeholder="Take a note..."
-                      value={this.state.description}
-                      onClick={this.onClickNote}/>
-                  </Typography>
+    this.addUpdateReminder(time)
+  }
+  reminderClose = () => {
+    removeReminderNote(this.state.noteID).then(response => {
+      console.log(response)
+    })
+    this.setState({reminderDisplay:"none"})
+    this.setState({reminderMsg:''})
+  }
 
-                </CardContent>
-                <CardActions>
-                  <div className="cardActions">
-                    <div className="subCard_buttonsLeft">
-                      <IconButton onClick={this.remiderHandler}>
-                        <AddAlertIcon/>
-                      </IconButton>
-                      <Menu 
-                        className="reminderMenu"
-                        style={{
-                        top: "50px"
-                      }}
-                        anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center'
-                      }}
-                        transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center'
-                      }}
-                        anchorEl={this.state.NoteReminderMenuAnchor}
-                        keepMounted
-                        open={this.state.NoteReminderMenuOpen}
-                        onClose={this.remiderHandler}>
-                        <MenuItem component="h2" >Reminder</MenuItem>
-                        <MenuItem>Later today</MenuItem>
-                        <MenuItem>Tomorrow</MenuItem>
-                        <MenuItem><WatchLaterIcon />Pick date & time</MenuItem>
-                      </Menu>
-                      <IconButton >
-                        <PersonAddIcon/>
-                      </IconButton>
-                      <IconButton>
-                        <ColorLensIcon/>
-                      </IconButton>
-                      <IconButton>
-                        
-                          <AddPhotoAlternateIcon />
-                        
-                      </IconButton>
-                      <IconButton>
-                        <ArchiveIcon/>
-                      </IconButton>
+  render() {
+    return (
+      <div>
+        <Card >
+          <CardContent>
+            <Typography color="textSecondary">
+              <InputBase
+                placeholder="Title"
+                value={this.state.title}
+                onClick={this.onClickTitle}/>
+            </Typography>
+            <Typography >
+              <InputBase
+                placeholder="Take a note..."
+                value={this.state.description}
+                onClick={this.onClickNote}/>
+            </Typography>
+            <div className="addReminderMain" style={{display:this.state.reminderDisplay}}>
+                    {/* <IconButton style={{cursor:"none"}}> */}
+                      <AccessAlarmsIcon />
+                    {/* </IconButton> */}
+                    {this.state.reminderMsg.substring(0, 11)}
+                    <IconButton onClick={this.reminderClose}>
+                      <HighlightOffIcon />
+                    </IconButton>
+                    
+                  </div>
+          </CardContent>
+          <CardActions>
+            <div className="cardActions">
+              <div className="subCard_buttonsLeft">
+                <IconButton onClick={this.remiderHandler}>
+                  <AddAlertIcon/>
+                </IconButton>
+                <Menu
+                  className="reminderMenu"
+                  style={{
+                  top: "50px"
+                }}
+                  anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center'
+                }}
+                  transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center'
+                }}
+                  anchorEl={this.state.NoteReminderMenuAnchor}
+                  keepMounted
+                  open={this.state.NoteReminderMenuOpen}
+                  onClose={this.remiderHandler}>
+                  <div
+                          style={{
+                          display: this.state.displayReminder
+                        }}>
+                          <li className="reminderHeading">Reminder</li>
+                          <MenuItem time='0' onClick={this.setReminderOnclick}>Later today   8:00 PM</MenuItem>
+                          <MenuItem time='1' onClick={this.setReminderOnclick}>Tomorrow    8:00 AM</MenuItem>
+                          <MenuItem time='7' onClick={this.setReminderOnclick}>Next Week    8:00 AM</MenuItem>
+                          <MenuItem onClick={this.clickPickDate}><WatchLaterIcon fontSize=" 0.90rem"/>Pick date & time</MenuItem>
 
-                      <IconButton onClick={this.moreMenuHandler}>
-                        <MoreVertIcon/>
-                      </IconButton>
-                      <Menu className="subNotesMoreMenu"
-                        style={{
-                        top: "50px"
-                      }}
-                        anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center'
-                      }}
-                        transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center'
-                      }}
-                        anchorEl={this.state.MoreMenuAnchor}
-                        keepMounted
-                        open={this.state.MoreMenuOpen}
-                        onClose={this.moreMenuHandler}>
-                        <MenuItem onClick={this.noteDelete}>Delete</MenuItem>
+                        </div>
+                        <div
+                          id="datePickBox"
+                          style={{
+                          display: this.state.displayDatePick
+                        }}>
+
+                          <Typography onClick={this.clickPickDate}><ArrowBackIcon/>Pick Date & Time</Typography>
+                          <TextField
+                            id="date"
+                            type="date"
+                            onChange={this.handleChangeDate}
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            />
+                          <TextField
+                            id="standard-select-currency"
+                            select
+                            label="Time"
+                            // value={this.state.time}
+                            onChange={this.handleChangeTime}
+                            helperText="Please select your time">
+                            {this
+                              .timing
+                              .map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                  {option.label}
+                                </MenuItem>
+                              ))}
+                          </TextField>
+                          <Button onClick={this.setReminderOnclick}>
+                            Save
+                          </Button>
+                        </div>
+                </Menu>
+                <IconButton >
+                  <PersonAddIcon/>
+                </IconButton>
+                <IconButton>
+                  <ColorLensIcon/>
+                </IconButton>
+                <IconButton>
+
+                  <AddPhotoAlternateIcon/>
+
+                </IconButton>
+                <IconButton>
+                  <ArchiveIcon/>
+                </IconButton>
+
+                <IconButton onClick={this.moreMenuHandler}>
+                  <MoreVertIcon/>
+                </IconButton>
+                <Menu
+                  className="subNotesMoreMenu"
+                  style={{
+                  top: "50px"
+                }}
+                  anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center'
+                }}
+                  transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center'
+                }}
+                  anchorEl={this.state.MoreMenuAnchor}
+                  keepMounted
+                  open={this.state.MoreMenuOpen}
+                  onClose={this.moreMenuHandler}>
+                  <MenuItem onClick={this.noteDelete}>Delete</MenuItem>
                         <MenuItem>Add Drawing</MenuItem>
                         <MenuItem>Show checkboxes</MenuItem>
-                      </Menu>
-                    </div>
-                    {/* <div className="card_buttonsRight">
+                </Menu>
+              </div>
+              {/* <div className="card_buttonsRight">
                       <Button>
                         close
                       </Button>
                     </div> */}
-                  </div>
-                </CardActions>
-              </Card>
+            </div>
+          </CardActions>
+        </Card>
 
-              <div>
-              <Dialog open={this.state.dialogBoxOpen} onClose={this.handelNoteDialogBox} aria-labelledby="form-dialog-title">
-                
-                <DialogContent>
-                  <Notes noteData={this.state.noteData} noteRefresh={this.state.noteRefresh}/>
-                </DialogContent>
-                  {/* <Button onClick={this.handelNoteDialogBox} color="primary">
+        <div>
+          <Dialog
+            open={this.state.dialogBoxOpen}
+            onClose={this.handelNoteDialogBox}
+            >
+
+            {/* <DialogContent> */}
+            <Card >
+              <CardContent>
+                <Typography color="textSecondary">
+                  <InputBase
+                    placeholder="Title"
+                    value={this.state.title}
+                    onChange={this.onChangeTitle}/>
+                </Typography>
+                <Typography >
+                  <InputBase
+                    placeholder="Take a note..."
+                    value={this.state.description}
+                    onChange={this.onChangeDescription}/>
+                </Typography>
+                <div className="addReminderMain" style={{display:this.state.reminderDisplay}}>
+                    {/* <IconButton style={{cursor:"none"}}> */}
+                      <AccessAlarmsIcon />
+                    {/* </IconButton> */}
+                    {this.state.reminderMsg.substring(0, 11)}
+                    <IconButton onClick={this.reminderClose}>
+                      <HighlightOffIcon />
+                    </IconButton>
+                    
+                  </div>
+              </CardContent>
+              <CardActions>
+                <div className="cardActions">
+                  <div className="buttonsLeftDialogBox">
+                    <IconButton onClick={this.remiderHandler}>
+                      <AddAlertIcon/>
+                    </IconButton>
+                    <Menu
+                      className="reminderMenu"
+                      style={{
+                      top: "50px"
+                    }}
+                      anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'center'
+                    }}
+                      transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'center'
+                    }}
+                      anchorEl={this.state.NoteReminderMenuAnchor}
+                      keepMounted
+                      open={this.state.NoteReminderMenuOpen}
+                      onClose={this.remiderHandler}>
+                      <div
+                          style={{
+                          display: this.state.displayReminder
+                        }}>
+                          <li className="reminderHeading">Reminder</li>
+                          <MenuItem time='0' onClick={this.setReminderOnclick}>Later today   8:00 PM</MenuItem>
+                          <MenuItem time='1' onClick={this.setReminderOnclick}>Tomorrow    8:00 AM</MenuItem>
+                          <MenuItem time='7' onClick={this.setReminderOnclick}>Next Week    8:00 AM</MenuItem>
+                          <MenuItem onClick={this.clickPickDate}><WatchLaterIcon fontSize=" 0.90rem"/>Pick date & time</MenuItem>
+
+                        </div>
+                        <div
+                          id="datePickBox"
+                          style={{
+                          display: this.state.displayDatePick
+                        }}>
+
+                          <Typography onClick={this.clickPickDate}><ArrowBackIcon/>Pick Date & Time</Typography>
+                          <TextField
+                            id="date"
+                            type="date"
+                            onChange={this.handleChangeDate}
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            />
+                          <TextField
+                            id="standard-select-currency"
+                            select
+                            label="Time"
+                            // value={this.state.time}
+                            onChange={this.handleChangeTime}
+                            helperText="Please select your time">
+                            {this
+                              .timing
+                              .map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                  {option.label}
+                                </MenuItem>
+                              ))}
+                          </TextField>
+                          <Button onClick={this.setReminderOnclick}>
+                            Save
+                          </Button>
+                        </div>
+                    </Menu>
+                    <IconButton >
+                      <PersonAddIcon/>
+                    </IconButton>
+                    <IconButton>
+                      <ColorLensIcon/>
+                    </IconButton>
+                    <IconButton>
+
+                      <AddPhotoAlternateIcon/>
+
+                    </IconButton>
+                    <IconButton>
+                      <ArchiveIcon/>
+                    </IconButton>
+
+                    <IconButton onClick={this.moreMenuHandler}>
+                      <MoreVertIcon/>
+                    </IconButton>
+                    <Menu
+                      className="subNotesMoreMenu"
+                      style={{
+                      top: "50px"
+                    }}
+                      anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'center'
+                    }}
+                      transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'center'
+                    }}
+                      anchorEl={this.state.MoreMenuAnchor}
+                      keepMounted
+                      open={this.state.MoreMenuOpen}
+                      onClose={this.moreMenuHandler}>
+                      <MenuItem onClick={this.noteDelete}>Delete</MenuItem>
+                      <MenuItem>Add Drawing</MenuItem>
+                      <MenuItem>Show checkboxes</MenuItem>
+                    </Menu>
+                  </div>
+                  <div className="card_buttonsRight">
+                      <Button onClick={this.updateNoteClick}>
+                        close
+                      </Button>
+                    </div>
+                </div>
+              </CardActions>
+            </Card>
+
+            {/* </DialogContent> */}
+            {/* <Button onClick={this.handelNoteDialogBox} color="primary">
                     Cancel
                   </Button> */}
-              </Dialog>
-            </div>
-            
-            </div>
-        )
-    }
+          </Dialog>
+        </div>
+
+      </div>
+    )
+  }
 }
 export default Notes
