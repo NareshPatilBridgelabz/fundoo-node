@@ -5,5 +5,8 @@ module.exports = {
     forgotPassword:"reset",
     getNotes:"getNotesList",
     setNotes:"addNotes",
-    deleteNote:"trashNotes"
+    deleteNote:"trashNotes",
+    updateNotes:"updateNotes",
+    addUpdateReminderNotes:"addUpdateReminderNotes",
+    removeReminderNotes:"removeReminderNotes"
 }
