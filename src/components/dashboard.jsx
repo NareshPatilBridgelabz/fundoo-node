@@ -31,8 +31,11 @@ import Note from './notes'
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import TextField from '@material-ui/core/TextField';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize'
 import {getUserNote} from '../services/noteServices'
 import {setUserNote} from '../services/noteServices'
+import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms'
+import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 // import Appbar from './appBar'
 import AcUnitIcon from '@material-ui/icons/AcUnit'
 // import Header from './dashbord/header'
@@ -53,31 +56,31 @@ class Dashboard extends Component {
       noteCardBackDisplay: "none",
       title: '',
       description: '',
+      reminderMain: '',
       allNotes: [],
       displayReminder: "",
       displayDatePick: "none",
-      timing: [
-        {
-          value: 'morning8:00AM',
-          label: 'morning     8:00 AM'
-        }, {
-          value: 'afternoon1:00PM',
-          label: 'afternoon   1:00 PM'
-        }, {
-          value: 'evening4:00PM',
-          label: 'evening     4:00 PM'
-        }, {
-          value: 'night8:00PM',
-          label: 'night       8:00 PM'
-        }
-      ],
-      time: ""
+      date: "",
+      time: "",
+      reminderDisplay: "none"
     }
-
     this.userNoteRefresh()
-    
-
   }
+  timing = [
+    {
+      value: 'morning8:00AM',
+      label: 'morning     8:00 AM'
+    }, {
+      value: 'afternoon1:00PM',
+      label: 'afternoon   1:00 PM'
+    }, {
+      value: 'evening4:00PM',
+      label: 'evening     4:00 PM'
+    }, {
+      value: 'night8:00PM',
+      label: 'night       8:00 PM'
+    }
+  ]
   userNoteRefresh = () => {
     getUserNote().then(response => {
       if(response.data.data.data){
@@ -138,18 +141,22 @@ class Dashboard extends Component {
   }
   addNote = (event) => {
     if(this.state.title != "" || this.state.description != ""){
-      
-      
       const form_data = new FormData();
       form_data.append('title', this.state.title);
       form_data.append('description', this.state.description);
+      form_data.append('reminder', this.state.reminderMain);
 
       setUserNote(form_data).then(response => {
-        console.log(response)
+        if(response){
+          this.userNoteRefresh()
+          this.onFocusTitle()
+        }
       })
-      this.userNoteRefresh()
+      
       this.setState({title:""})
       this.setState({description:""})
+      //for close the main Note Box
+      
     }
   }
   onChangeTitle = (event) => {
@@ -179,17 +186,30 @@ class Dashboard extends Component {
         : ""
     })
   }
+  handleChangeDate = (event) => {
+    this.setState({date: event.target.value})
+  }
   handleChangeTime = (event) => {
-    console.log(event.currentTarget, event.currentTarget.value);
-    console.log(event.currentTarget.dataset.value)
     this.setState({time: event.currentTarget.dataset.value})
+  }
+  setReminderOnclick = (event) => {
+    let time = ""
+    let date = new Date()
+    if(event.target.getAttribute('time')){
+      time = new Date(date.setDate(date.getDate() + parseInt(event.target.getAttribute('time')))).toString()
+    } else {
+      time = new Date(this.state.date).toString()
+    }
+    this.setState({reminderMain:time})
+    this.setState({reminderDisplay:"flex"})
+    this.setState({reminderMenuOpen: !this.state.reminderMenuOpen})
+  }
+  reminderClose = () => {
+    this.setState({reminderDisplay:"none"})
+    this.setState({reminderMain:''})
   }
 
   render() {
-    // let allObj = this   .state   .allNotes   .map(allnote => {     if
-    // (allnote.isArchived === false && allnote.isDeleted === false &&
-    // allnote.isPined === false) {       return (<Note         />)     }     return
-    // null   })
     return (
       <div>
         <div className='headerbar'>
@@ -298,12 +318,24 @@ class Dashboard extends Component {
                     display: this.state.noteCardBackDisplay
                   }}>
                     <InputBase
+                      type="textarea"
                       placeholder="Take a note..."
+                      rowsMin={3}
                       value={this.state.description}
                       onChange={this.onChangeNote}/>
                     <div className="listItem"></div>
                   </Typography>
 
+                  <div className="addReminderMain" style={{display:this.state.reminderDisplay}}>
+                    {/* <IconButton style={{cursor:"none"}}> */}
+                      <AccessAlarmsIcon />
+                    {/* </IconButton> */}
+                    {this.state.reminderMain.substring(0, 11)}
+                    <IconButton onClick={this.reminderClose}>
+                      <HighlightOffIcon />
+                    </IconButton>
+                    
+                  </div>
                 </CardContent>
                 <CardActions
                   style={{
@@ -333,9 +365,10 @@ class Dashboard extends Component {
                           style={{
                           display: this.state.displayReminder
                         }}>
-                          <MenuItem component="h2">Reminder</MenuItem>
-                          <MenuItem>Later today</MenuItem>
-                          <MenuItem>Tomorrow</MenuItem>
+                          <li className="reminderHeading">Reminder</li>
+                          <MenuItem time='0' onClick={this.setReminderOnclick}>Later today   8:00 PM</MenuItem>
+                          <MenuItem time='1' onClick={this.setReminderOnclick}>Tomorrow    8:00 AM</MenuItem>
+                          <MenuItem time='7' onClick={this.setReminderOnclick}>Next Week    8:00 AM</MenuItem>
                           <MenuItem onClick={this.clickPickDate}><WatchLaterIcon fontSize=" 0.90rem"/>Pick date & time</MenuItem>
 
                         </div>
@@ -349,19 +382,19 @@ class Dashboard extends Component {
                           <TextField
                             id="date"
                             type="date"
-                            defaultValue="2017-05-24"
+                            onChange={this.handleChangeDate}
                             InputLabelProps={{
-                            shrink: true
-                          }}/>
+                              shrink: true,
+                            }}
+                            />
                           <TextField
                             id="standard-select-currency"
                             select
                             label="Time"
-                            value={this.state.time}
+                            // value={this.state.time}
                             onChange={this.handleChangeTime}
                             helperText="Please select your time">
                             {this
-                              .state
                               .timing
                               .map((option) => (
                                 <MenuItem key={option.value} value={option.value}>
@@ -369,6 +402,9 @@ class Dashboard extends Component {
                                 </MenuItem>
                               ))}
                           </TextField>
+                          <Button onClick={this.setReminderOnclick}>
+                            Save
+                          </Button>
                         </div>
                       </Menu>
                       <IconButton>
