@@ -25,10 +25,15 @@ import {deleteUserNote} from '../services/noteServices'
 import {updateUserNote} from '../services/noteServices'
 import {addUpdateReminderNote} from '../services/noteServices'
 import {removeReminderNote} from '../services/noteServices'
-import NoteDialogBox from './noteDialogBox'
+import {changesColorNotes} from '../services/noteServices'
+import {archiveNote} from '../services/noteServices'
+import {deleteNoteForever} from '../services/noteServices'
 import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import Checkbox from '@material-ui/core/Checkbox'
+import ColorBox from './colorBox'
+import UnarchiveIcon from '@material-ui/icons/Unarchive';
 
 class Notes extends React.Component {
   constructor(props) {
@@ -47,10 +52,14 @@ class Notes extends React.Component {
       dialogBoxOpen: false,
       reminderMsg:props.noteData.reminder[0]?props.noteData.reminder[0]:'',
       reminderDisplay:props.noteData.reminder[0]?'flex':'none',
+      list:props.noteData.noteCheckLists,
       displayReminder: "",
-      displayDatePick: "none"
+      displayDatePick: "none",
+      noteColor:props.noteData.color,
+      isArchive: props.noteData.isArchived,
+      noteDelete: props.noteData.isDeleted
     }
-    console.log(props.noteData)
+    // console.log(props.noteData)
   }
   timing = [
     {
@@ -89,7 +98,6 @@ class Notes extends React.Component {
   }
   noteDelete = () => {
     deleteUserNote(this.state.noteID).then(response => {
-      // console.log(response)
       this
         .state
         .noteRefresh()
@@ -111,8 +119,8 @@ class Notes extends React.Component {
     update_Data.append('noteId',this.state.noteID)
     update_Data.append('title',this.state.title)
     update_Data.append('description',this.state.description)
+    update_Data.append('color',this.state.noteColor)
     updateUserNote(update_Data).then(response => {
-      console.log(response)
     })
     this.handelNoteDialogBox()
     this.state.noteRefresh()
@@ -121,7 +129,6 @@ class Notes extends React.Component {
     // alert(this.state.reminderMsg)
     let reminderData = {reminder: date, noteIdList: [this.state.noteID]}
     addUpdateReminderNote(reminderData).then(response => {
-      console.log(response)
     })
   }
   
@@ -157,17 +164,32 @@ class Notes extends React.Component {
   }
   reminderClose = () => {
     removeReminderNote(this.state.noteID).then(response => {
-      console.log(response)
+      
     })
     this.setState({reminderDisplay:"none"})
     this.setState({reminderMsg:''})
   }
-
+  onClickChanageColor =async (event) => {
+    await this.setState({noteColor:event.target.getAttribute('color')})
+    let colorData = {color:this.state.noteColor,noteIdList: [this.state.noteID]}
+    changesColorNotes(colorData)
+  }
+  onClickArchive =async  () => {
+    await this.setState({isArchive:!this.state.isArchive})
+    let archiveData = {isArchived:this.state.isArchive,noteIdList: [this.state.noteID]}
+    archiveNote(archiveData)
+    this.state.noteRefresh()
+  }
+  noteDeleteForever = () => {
+    let deleteData = {noteIdList: [this.state.noteID]}
+    deleteNoteForever(deleteData)
+    this.state.noteRefresh()
+  }
   render() {
     return (
       <div>
-        <Card >
-          <CardContent>
+        <Card style={{backgroundColor:this.state.noteColor}}>
+          <CardContent className="cardRowNote">
             <Typography color="textSecondary">
               <InputBase
                 placeholder="Title"
@@ -180,6 +202,30 @@ class Notes extends React.Component {
                 value={this.state.description}
                 onClick={this.onClickNote}/>
             </Typography>
+            <div >
+                    <ul className="list_ul">
+                      {this.state.list.map(element => {
+                        return(
+                          <li>
+                        <Checkbox
+                          defaultChecked
+                          color="primary"
+                          inputProps={{ 'aria-label': 'secondary checkbox' }}
+                        />
+                        <InputBase
+                          value={element.itemName}
+                          inputProps={{ 'aria-label': 'naked' }}
+                        />
+                        <IconButton >
+                          <HighlightOffIcon />
+                        </IconButton>
+                      </li>
+                        )
+                      })}
+                      
+                    </ul>
+                  </div>
+
             <div className="addReminderMain" style={{display:this.state.reminderDisplay}}>
                     {/* <IconButton style={{cursor:"none"}}> */}
                       <AccessAlarmsIcon />
@@ -222,7 +268,7 @@ class Notes extends React.Component {
                           <MenuItem time='0' onClick={this.setReminderOnclick}>Later today   8:00 PM</MenuItem>
                           <MenuItem time='1' onClick={this.setReminderOnclick}>Tomorrow    8:00 AM</MenuItem>
                           <MenuItem time='7' onClick={this.setReminderOnclick}>Next Week    8:00 AM</MenuItem>
-                          <MenuItem onClick={this.clickPickDate}><WatchLaterIcon fontSize=" 0.90rem"/>Pick date & time</MenuItem>
+                          <MenuItem onClick={this.clickPickDate}><WatchLaterIcon/>Pick date & time</MenuItem>
 
                         </div>
                         <div
@@ -263,16 +309,17 @@ class Notes extends React.Component {
                 <IconButton >
                   <PersonAddIcon/>
                 </IconButton>
-                <IconButton>
-                  <ColorLensIcon/>
-                </IconButton>
+                
+                   <ColorBox changeColor={this.onClickChanageColor}/>
+                
                 <IconButton>
 
                   <AddPhotoAlternateIcon/>
 
                 </IconButton>
-                <IconButton>
-                  <ArchiveIcon/>
+
+                <IconButton onClick={this.onClickArchive}>
+                  {this.state.isArchive?<UnarchiveIcon/>:<ArchiveIcon/>}
                 </IconButton>
 
                 <IconButton onClick={this.moreMenuHandler}>
@@ -295,9 +342,12 @@ class Notes extends React.Component {
                   keepMounted
                   open={this.state.MoreMenuOpen}
                   onClose={this.moreMenuHandler}>
+                  {this.state.noteDelete?
+                  <MenuItem onClick={this.noteDeleteForever}>DeleteForever</MenuItem>:
                   <MenuItem onClick={this.noteDelete}>Delete</MenuItem>
-                        <MenuItem>Add Drawing</MenuItem>
-                        <MenuItem>Show checkboxes</MenuItem>
+                  }
+                  <MenuItem>Add Drawing</MenuItem>
+                  <MenuItem>Show checkboxes</MenuItem>
                 </Menu>
               </div>
               {/* <div className="card_buttonsRight">
@@ -316,7 +366,7 @@ class Notes extends React.Component {
             >
 
             {/* <DialogContent> */}
-            <Card >
+            <Card style={{backgroundColor:this.state.noteColor}}>
               <CardContent>
                 <Typography color="textSecondary">
                   <InputBase
@@ -372,7 +422,7 @@ class Notes extends React.Component {
                           <MenuItem time='0' onClick={this.setReminderOnclick}>Later today   8:00 PM</MenuItem>
                           <MenuItem time='1' onClick={this.setReminderOnclick}>Tomorrow    8:00 AM</MenuItem>
                           <MenuItem time='7' onClick={this.setReminderOnclick}>Next Week    8:00 AM</MenuItem>
-                          <MenuItem onClick={this.clickPickDate}><WatchLaterIcon fontSize=" 0.90rem"/>Pick date & time</MenuItem>
+                          <MenuItem onClick={this.clickPickDate}><WatchLaterIcon />Pick date & time</MenuItem>
 
                         </div>
                         <div
