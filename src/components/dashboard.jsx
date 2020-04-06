@@ -40,6 +40,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import ColorBox from './colorBox'
+import LableSideBar from './lableSideBar'
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -76,7 +77,8 @@ class Dashboard extends Component {
       diplayCheckBox: "none",
       isArchive: false,
       noteColor:'',
-      openBackDrop:'false'
+      openBackDrop:'false',
+      lables:['l1','l2']
     };
     this.userNoteRefresh();
   }
@@ -103,10 +105,10 @@ class Dashboard extends Component {
     },
   ];
   userNoteRefresh = () => {
-    // this.setState({openBackDrop:TextTrackCue})
+    this.setState({openBackDrop:TextTrackCue})
     getUserNote().then((response) => {
       if (response.data.data.data) {
-        // this.setState({openBackDrop:false})
+        this.setState({openBackDrop:false})
         this.setState({ allNotes: response.data.data.data });
       }
     });
@@ -260,7 +262,7 @@ class Dashboard extends Component {
   }
   render() {
     let arcObj = this.state.allNotes.map((allnote) => {
-      if (allnote.isDeleted === false && allnote.isArchived === true) {
+      if (!allnote.isDeleted && allnote.isArchived) {
         return (
           <Note
             key={allnote.id}
@@ -273,7 +275,19 @@ class Dashboard extends Component {
     });
 
     let trashObj = this.state.allNotes.map((allnote) => {
-      if (allnote.isDeleted === true) {
+      if (allnote.isDeleted) {
+        return (
+          <Note
+            key={allnote.id}
+            noteData={allnote}
+            noteRefresh={this.userNoteRefresh}
+          />
+        );
+      }
+      return null;
+    });
+    let reminderObj = this.state.allNotes.map((allnote) => {
+      if (allnote.reminder.length > 0 && !allnote.isDeleted) {
         return (
           <Note
             key={allnote.id}
@@ -380,7 +394,7 @@ class Dashboard extends Component {
               Reminder
             </div>
             <Divider />
-            <div
+            {/* <div
               className="sidebar_component"
               data="editlable"
               onClick={this.changeMainContainer}
@@ -388,7 +402,8 @@ class Dashboard extends Component {
             
               <EditIcon />
               Edit Lable
-            </div>
+            </div> */}
+            <LableSideBar lables={this.state.lables} />
             <Divider />
             <div
               className="sidebar_component"
@@ -423,6 +438,7 @@ class Dashboard extends Component {
                     <CardContent >
                       <Typography color="textSecondary">
                         <InputBase
+                          className='fontStyle_main'
                           inputProps={{
                             placeholder: "Title",
                             "data-state": "Data State 1",
@@ -439,6 +455,7 @@ class Dashboard extends Component {
                         </IconButton>
                       </Typography>
                       <Typography
+                        className="cardTakenoteField"
                         style={{
                           display: this.state.noteCardBackDisplay,
                         }}
@@ -518,7 +535,7 @@ class Dashboard extends Component {
                         display: this.state.noteCardBackDisplay,
                       }}
                     >
-                      <div className="cardActions">
+                      <div className="cardActionsMain">
                         <div className="card_buttonsLeft">
                           <IconButton onClick={this.remiderHandler}>
                             <AddAlertIcon />
@@ -658,7 +675,7 @@ class Dashboard extends Component {
                           key={objNote.id}
                           noteData={objNote}
                           noteRefresh={this.userNoteRefresh}
-                        />
+                      />
                       );
                     }
                   })}
@@ -668,13 +685,16 @@ class Dashboard extends Component {
               <div className="notes">{arcObj}</div>
             ) : this.state.containerRender === "trashnote" ? (
               <div className="notes">{trashObj}</div>
-            ) : <div>sasas<ColorBox /> </div> }
-            {/* <Backdrop  open={this.state.openBackDrop}>
-              <CircularProgress color="inherit" />
-            </Backdrop> */}
+            ) : this.state.containerRender === "reminder" ? (
+              <div className="notes">{reminderObj}</div>
+              // console.log(this.state.lables)
+            ) : <div> </div> }
+            
           </div>
         </div>
-        
+        <Backdrop style={{zIndex: 1}}  open={this.state.openBackDrop}>
+              <CircularProgress color="inherit" />
+            </Backdrop>
       </div>
       
     );
