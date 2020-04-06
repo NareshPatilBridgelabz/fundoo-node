@@ -25,10 +25,9 @@ export async function setUserNote(noteData){
     }
 }
 
-export async function deleteUserNote(noteID){
+export async function deleteRestoreUserNote(deleteRestoreData){
     try{
-        let noteData = {isDeleted: true, noteIdList: [noteID]}
-        const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.deleteNote,noteData,{
+        const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.deleteNote,deleteRestoreData,{
             headers: {
                 Authorization:userData.id
         }});
@@ -66,6 +65,86 @@ export async function removeReminderNote(noteID){
     try{
         let noteData = {noteIdList: [noteID]}
         const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.removeReminderNotes,noteData,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+
+export async function changesColorNotes(colordata){
+    try{
+        const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.changesColorNotes,colordata,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+
+export async function archiveNote(archiveData){
+    try{
+        const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.archiveNotes,archiveData,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+export async function deleteNoteForever(noteId){
+    try{
+        const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.deleteForeverNotes,noteId,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+export async function getLableList(){
+    try{
+        const response = await axios.get(process.env.REACT_APP_NOTES_LABLE+'/'+userApiConstants.GetNoteLabelList,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+export async function addNotelable(label){
+    try{
+        let lableData = {label:label,isDeleted:false,userId:userData.userId}
+        const response = await axios.post(process.env.REACT_APP_NOTES_LABLE,lableData,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+export async function deleteNotelable(labelId){
+    try{
+        const response = await axios.delete(process.env.REACT_APP_NOTES_LABLE+'/'+labelId+'/deleteNoteLabel',{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+export async function updateNoteLabel(labelId,editLabel){
+    try{
+        const response = await axios.post(process.env.REACT_APP_NOTES_LABLE+'/'+labelId+'/updateNoteLabel',editLabel,{
             headers: {
                 Authorization:userData.id
         }});
