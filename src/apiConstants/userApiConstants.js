@@ -8,5 +8,9 @@ module.exports = {
     deleteNote:"trashNotes",
     updateNotes:"updateNotes",
     addUpdateReminderNotes:"addUpdateReminderNotes",
-    removeReminderNotes:"removeReminderNotes"
+    removeReminderNotes:"removeReminderNotes",
+    changesColorNotes:"changesColorNotes",
+    archiveNotes:"archiveNotes",
+    deleteForeverNotes:"deleteForeverNotes",
+    GetNoteLabelList:'getNoteLabelList'
 }
