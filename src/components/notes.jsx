@@ -21,7 +21,7 @@ import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import AddAlertIcon from '@material-ui/icons/AddAlert';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
 import PlaceIcon from '@material-ui/icons/Place';
-import {deleteUserNote} from '../services/noteServices'
+import {deleteRestoreUserNote} from '../services/noteServices'
 import {updateUserNote} from '../services/noteServices'
 import {addUpdateReminderNote} from '../services/noteServices'
 import {removeReminderNote} from '../services/noteServices'
@@ -96,8 +96,9 @@ class Notes extends React.Component {
     // this.setState({description:event.currentTarget.value})
     this.handelNoteDialogBox()
   }
-  noteDelete = () => {
-    deleteUserNote(this.state.noteID).then(response => {
+  noteDeleteRestore = (e, deleteNote) => {
+    let deleteData = {isDeleted: deleteNote, noteIdList: [this.state.noteID]}
+    deleteRestoreUserNote(deleteData).then(response => {
       this
         .state
         .noteRefresh()
@@ -130,6 +131,7 @@ class Notes extends React.Component {
     let reminderData = {reminder: date, noteIdList: [this.state.noteID]}
     addUpdateReminderNote(reminderData).then(response => {
     })
+    this.state.noteRefresh()
   }
   
   onClickCheckList = () => {}
@@ -168,6 +170,8 @@ class Notes extends React.Component {
     })
     this.setState({reminderDisplay:"none"})
     this.setState({reminderMsg:''})
+    this.state.noteRefresh()
+    
   }
   onClickChanageColor =async (event) => {
     await this.setState({noteColor:event.target.getAttribute('color')})
@@ -188,7 +192,7 @@ class Notes extends React.Component {
   render() {
     return (
       <div>
-        <Card style={{backgroundColor:this.state.noteColor}}>
+        <Card id='notesCard' style={{backgroundColor:this.state.noteColor}}>
           <CardContent className="cardRowNote">
             <Typography color="textSecondary">
               <InputBase
@@ -342,12 +346,11 @@ class Notes extends React.Component {
                   keepMounted
                   open={this.state.MoreMenuOpen}
                   onClose={this.moreMenuHandler}>
-                  {this.state.noteDelete?
-                  <MenuItem onClick={this.noteDeleteForever}>DeleteForever</MenuItem>:
-                  <MenuItem onClick={this.noteDelete}>Delete</MenuItem>
+                  {this.state.noteDelete?<div>
+                  <MenuItem onClick={this.noteDeleteForever}>DeleteForever</MenuItem>
+                  <MenuItem onClick={e => {this.noteDeleteRestore(e,false)}}>Restore</MenuItem></div>:
+                  <MenuItem onClick={e => {this.noteDeleteRestore(e,true)}}>Delete</MenuItem>
                   }
-                  <MenuItem>Add Drawing</MenuItem>
-                  <MenuItem>Show checkboxes</MenuItem>
                 </Menu>
               </div>
               {/* <div className="card_buttonsRight">
@@ -495,7 +498,7 @@ class Notes extends React.Component {
                       keepMounted
                       open={this.state.MoreMenuOpen}
                       onClose={this.moreMenuHandler}>
-                      <MenuItem onClick={this.noteDelete}>Delete</MenuItem>
+                      <MenuItem onClick={this.noteDeleteRestore}>Delete</MenuItem>
                       <MenuItem>Add Drawing</MenuItem>
                       <MenuItem>Show checkboxes</MenuItem>
                     </Menu>
