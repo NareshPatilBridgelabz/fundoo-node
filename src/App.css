@@ -56,11 +56,17 @@
 }
 
 .sidebar {
-  margin-top: 5px;
-  /* background-color: grey; */
+  height: 100%;
   width: 20%;
   position: absolute;
   transition: 1s;
+  left: 0%;
+  font-size: small;
+  font-weight: 700;
+  color: gray;
+  background-color: beige;
+  height: -webkit-fill-available;
+  border-radius: 0px 0px 16px 16px;
 }
 
 .sidebar_component {
@@ -223,9 +229,34 @@ h2 {
   width: 50%;
   box-shadow: 1px 1px 3px 1px;
 }
+.cardRow p.MuiTypography-root.MuiTypography-body1.MuiTypography-colorTextSecondary{
+  display: flex;
+  height: 20px;
+  align-items: center;
+}
 .cardActions{
   display: flex;
   width: 100%;
+  visibility: hidden;
+}
+.cardActionsMain{
+  display: flex;
+  width: 100%;
+}
+#notesCard{
+  cursor: pointer;
+}
+#notesCard {
+  box-shadow: 1px 1px 5px 0px;
+}
+#notesCard:hover .cardActions{
+  visibility: visible;
+}
+#notesCard:hover {
+  box-shadow: 2px 2px 10px 2px;
+}
+.fontStyle_main{
+  font-weight: 500;
 }
 .card_buttonsLeft{
   width: 50%  ;
@@ -235,6 +266,9 @@ h2 {
   width: 50%  ;   
   display: flex;
   justify-content: flex-end;
+}
+.card_buttonsRight .MuiButton-label{
+  font-weight: 600;
 }
 .reminderMenu .MuiButtonBase-root{
   font-size: small;
@@ -246,13 +280,12 @@ h2 {
 }
 .notes{
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   flex-flow: wrap;
   margin-top: 30px;
 }
 .notes > * {
   margin: 10px;
-  width: 30%;
 }
 #checkList{
   float: right;
@@ -279,19 +312,19 @@ h2 {
 .subNotesMoreMenu .MuiMenuItem-root{
   font-size: small;
 }
-.MuiPaper-root.MuiDialog-paper{
+/* .MuiPaper-root.MuiDialog-paper{
   width: 50%;
-}
+} */
 .buttonsLeftDialogBox{
   width: 100%  ;
   display: flex;
   justify-content: space-evenly;
 }
-.notes .MuiCard-root.MuiPaper-elevation1{
-  box-shadow: 1px 1px 5px 0px;
-}
 .cardRow .MuiCardContent-root{
   padding: 10px;
+}
+.cardRow .MuiInputBase-input{
+  font-weight: 600;
 }
 .reminderHeading{
   font-size: medium;
@@ -307,4 +340,116 @@ h2 {
     width: 65%;
     background-color: antiquewhite;
     border-radius: 22px 22px 22px 22px;
+}
+.list_ul{
+  list-style: none;
+}
+
+.list_ul > * {
+  height: 25px;
+}
+.listMainInput{
+  display: flex;
+  align-items: center;
+  border-width: 1px;
+  border-color: gray;
+  border-top-style: solid;
+  border-bottom-style: solid;
+}
+.cardRow .MuiTypography-root.MuiTypography-body1.MuiTypography-colorTextSecondary{
+  display: flex;
+  justify-content: space-between;
+}
+.cardRowNote .MuiTypography-root.MuiTypography-body1.MuiTypography-colorTextSecondary{
+  display: flex;
+  justify-content: space-between;
+}
+.cardRowNote .MuiInputBase-root{
+  font-weight: 600;
+}
+.addReminderMain{
+  font-size: x-small;
+  height: 30px;
+}
+.addReminderMain .MuiSvgIcon-root {
+  font-size: medium;
+}
+.listMainInput > *{
+  padding-right: 30px;
+}
+.colorBoxRoot .MuiPaper-root.MuiPopover-paper{
+  max-width: 10.8%;
+}
+.colorBox{
+  display: flex;
+  flex-wrap: wrap;
+}
+.colorBox > *{
+  margin: 5px;    
+  min-height: 20px;
+  min-width: 20px;
+  background-color: blueviolet;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.lableContainer{
+  background-color: beige;
+}
+.lableHeader{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+}
+.lable > * {
+  margin-right: 20px;
+}
+.lable{
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  height: 43px;
+}
+.cardTakenoteField > .MuiInputBase-root{
+  margin-top: 10px;
+}
+
+.lableFooter{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.lableFooter > *{
+  margin-right: 10px;
+}
+.lableList > *:hover {
+  background-color: #dfdfdf;
+  border-radius: 0px 30px 30px 0px;
+}
+#simple-dialog-lable .MuiPaper-root.MuiDialog-paper{
+  width: 30%;
+}
+.addLableHead{
+  display:flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.addLableHead > *{
+  margin-right: 10px;
+}
+.editLablelist{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 30px;
+}
+.editLableFooter{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: 10px;
+  margin-top: 20px;
+}
+#diloadBoxTitleLable{
+  height: 10px;
 }
