@@ -28,11 +28,13 @@ import {removeReminderNote} from '../services/noteServices'
 import {changesColorNotes} from '../services/noteServices'
 import {archiveNote} from '../services/noteServices'
 import {deleteNoteForever} from '../services/noteServices'
+import {removeNoteLabel} from '../services/noteServices'
 import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import Checkbox from '@material-ui/core/Checkbox'
 import ColorBox from './colorBox'
+import AddLabelSubNote from './addLabelSubNote'
 import UnarchiveIcon from '@material-ui/icons/Unarchive';
 
 class Notes extends React.Component {
@@ -56,10 +58,12 @@ class Notes extends React.Component {
       displayReminder: "",
       displayDatePick: "none",
       noteColor:props.noteData.color,
+      labelIdList:props.noteData.labelIdList,
       isArchive: props.noteData.isArchived,
-      noteDelete: props.noteData.isDeleted
+      noteDelete: props.noteData.isDeleted,
+      listdata:[],
+      noteLabels:props.noteData.noteLabels
     }
-    // console.log(props.noteData)
   }
   timing = [
     {
@@ -189,6 +193,13 @@ class Notes extends React.Component {
     deleteNoteForever(deleteData)
     this.state.noteRefresh()
   }
+  removeLabeFromNote = (labelId,index) => {
+    this.state.noteLabels.splice(index,1)
+    removeNoteLabel(labelId,this.state.noteID).then(response => {if(response) {this.state.noteRefresh()
+      this.state.noteRefresh()
+    }})
+    
+  }
   render() {
     return (
       <div>
@@ -239,6 +250,20 @@ class Notes extends React.Component {
                       <HighlightOffIcon />
                     </IconButton>
                     
+                  </div>
+                  <div className="lableInNote">
+                        {this.state.noteLabels.map((ele,index) => {
+                         
+                                  return(
+                                  <div >
+                                    <div>{ele.label}</div>
+                                    <IconButton size="small">
+                                      <HighlightOffIcon onClick={e => this.removeLabeFromNote(ele.id,index)} />
+                                    </IconButton>
+                                  </div>
+                                  )
+                          
+                        })}
                   </div>
           </CardContent>
           <CardActions>
@@ -349,7 +374,8 @@ class Notes extends React.Component {
                   {this.state.noteDelete?<div>
                   <MenuItem onClick={this.noteDeleteForever}>DeleteForever</MenuItem>
                   <MenuItem onClick={e => {this.noteDeleteRestore(e,false)}}>Restore</MenuItem></div>:
-                  <MenuItem onClick={e => {this.noteDeleteRestore(e,true)}}>Delete</MenuItem>
+                  <div><MenuItem onClick={e => {this.noteDeleteRestore(e,true)}}>Delete</MenuItem>
+                  <AddLabelSubNote noteData={this.state.noteData} noteRefresh={this.state.noteRefresh}/></div>
                   }
                 </Menu>
               </div>
@@ -395,7 +421,7 @@ class Notes extends React.Component {
                   </div>
               </CardContent>
               <CardActions>
-                <div className="cardActions">
+                <div className="cardActionsEdit">
                   <div className="buttonsLeftDialogBox">
                     <IconButton onClick={this.remiderHandler}>
                       <AddAlertIcon/>
@@ -499,7 +525,7 @@ class Notes extends React.Component {
                       open={this.state.MoreMenuOpen}
                       onClose={this.moreMenuHandler}>
                       <MenuItem onClick={this.noteDeleteRestore}>Delete</MenuItem>
-                      <MenuItem>Add Drawing</MenuItem>
+                      <AddLabelSubNote />
                       <MenuItem>Show checkboxes</MenuItem>
                     </Menu>
                   </div>
