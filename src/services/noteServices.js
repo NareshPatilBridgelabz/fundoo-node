@@ -153,3 +153,28 @@ export async function updateNoteLabel(labelId,editLabel){
         return err
     }
 }
+
+export async function removeNoteLabel(lableId,noteId){
+    try{
+        let data = {}
+        const response = await axios.post(process.env.REACT_APP_API_URL+'notes/'+noteId+'/addLabelToNotes/'+lableId+'/remove',data,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+export async function addSubNoteLabel(lableId,noteId){
+    try{
+        let data = {}
+        const response = await axios.post(process.env.REACT_APP_API_URL+'notes/'+noteId+'/addLabelToNotes/'+lableId+'/add',data,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
