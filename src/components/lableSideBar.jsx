@@ -62,7 +62,7 @@ export default class LabaleSideBar extends React.Component {
       <div className="lableContainer">
         <div className="lableHeader">
           <div>LABLE</div>
-          <Button onClick={this.handleClickOpen}>Edit</Button>
+          <Button variant='outlined' size="small" color="primary" onClick={this.handleClickOpen}>Edit</Button>
         </div>
         <div className="lableList">
 
