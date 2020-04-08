@@ -239,6 +239,10 @@ h2 {
   width: 100%;
   visibility: hidden;
 }
+.cardActionsEdit{
+  display: flex;
+  width: 100%;
+}
 .cardActionsMain{
   display: flex;
   width: 100%;
@@ -399,7 +403,10 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  
+  margin-top: 10px;
+}
+.lableHeader > .MuiButtonBase-root {
+  margin-right: 10px;
 }
 .lable > * {
   margin-right: 20px;
@@ -452,4 +459,28 @@ h2 {
 }
 #diloadBoxTitleLable{
   height: 10px;
+}
+.lablelistSelect{
+  display: flex;
+  align-items: center;
+}
+.lableInNote{
+  display: flex;
+  align-items: center;
+}
+.lableInNote > *{
+  display: flex;
+  align-items: center;
+  background-color: greenyellow;
+  justify-content: space-around;
+  border-radius: 10px 10px 10px 10px;
+  padding: 5px;
+  margin-right: 10px;
+}
+.lableAddInstanceHeading {
+  margin: 10px;
+}
+.addLabelOnNote{
+  margin-right:20px;
+  margin-left: 20px;
 }
