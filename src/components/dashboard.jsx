@@ -34,6 +34,7 @@ import TextField from "@material-ui/core/TextField";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import { getUserNote } from "../services/noteServices";
 import { setUserNote } from "../services/noteServices";
+import { removeNoteLabel } from "../services/noteServices";
 import AccessAlarmsIcon from "@material-ui/icons/AccessAlarms";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -41,6 +42,7 @@ import AddIcon from "@material-ui/icons/Add";
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import ColorBox from './colorBox'
 import LableSideBar from './lableSideBar'
+import AddLabelNote from './addLabelNote'
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -78,9 +80,18 @@ class Dashboard extends Component {
       isArchive: false,
       noteColor:'',
       openBackDrop:'false',
-      lables:['l1','l2']
+      labelIdList:[]
     };
     this.userNoteRefresh();
+  }
+
+  labelIdListChange = () => {
+    this.setState({labelIdList:this.state.labelIdList})
+  }
+  labelIdListRemove = (index) => {
+    console.log("Remove List")
+    this.state.labelIdList.splice(index,1)
+    this.setState({labelIdList:this.state.labelIdList})
   }
   changeMainContainer = (event) => {
     this.state.containerRender = event.target.getAttribute("data");
@@ -160,6 +171,10 @@ class Dashboard extends Component {
     });
   };
   addNote = () => {
+    // label list
+      let id = []
+      this.state.labelIdList.map(e => { id.push(e.id) })
+
     if (this.state.title != "") {
       const form_data = new FormData();
       form_data.append("title", this.state.title);
@@ -168,6 +183,7 @@ class Dashboard extends Component {
       form_data.append("checklist", JSON.stringify(this.state.list));
       form_data.append("isArchived", this.state.isArchive);
       form_data.append("color", this.state.noteColor);
+      form_data.append("labelIdList", JSON.stringify(id));
 
       setUserNote(form_data).then((response) => {
         if (response) {
@@ -183,6 +199,7 @@ class Dashboard extends Component {
       this.setState({ list: [] })
       this.setState({ diplayCheckBox: "none" })
       this.setState({ noteColor: "" })
+      this.setState({ labelIdList: [] })
       //for close the main Note Box
     }
   };
@@ -403,7 +420,7 @@ class Dashboard extends Component {
               <EditIcon />
               Edit Lable
             </div> */}
-            <LableSideBar lables={this.state.lables} />
+            <LableSideBar />
             <Divider />
             <div
               className="sidebar_component"
@@ -528,6 +545,17 @@ class Dashboard extends Component {
                         <IconButton value="dfdf" onClick={this.reminderClose}>
                           <HighlightOffIcon />
                         </IconButton>
+                      </div>
+
+                      <div className="lableInNote">
+                        {this.state.labelIdList.map((e, index) => {
+                          return(<div >
+                            <div>{e.label}</div>
+                            <IconButton size="small">
+                              <HighlightOffIcon onClick={e => this.labelIdListRemove(index)}/>
+                            </IconButton>
+                          </div>)
+                        })}
                       </div>
                     </CardContent>
                     <CardActions
@@ -655,7 +683,7 @@ class Dashboard extends Component {
                             open={this.state.MoreMenuOpen}
                             onClose={this.moreMenuHandler}
                           >
-                            <MenuItem>Add Lable</MenuItem>
+                            <AddLabelNote labelIdList={this.state.labelIdList} labelIdListChange={this.labelIdListChange}/>
                             <MenuItem>Add Drawing</MenuItem>
                             <MenuItem>Show checkboxes</MenuItem>
                           </Menu>
