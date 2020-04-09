@@ -3,10 +3,12 @@ import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import IconButton from "@material-ui/core/IconButton";
 import ColorLensIcon from "@material-ui/icons/ColorLens";
-import { Menu, MenuItem } from "@material-ui/core";
+import { Menu, MenuItem, Button } from "@material-ui/core";
 import {getLableList} from '../services/noteServices'
 import {addSubNoteLabel} from '../services/noteServices'
 import Checkbox from '@material-ui/core/Checkbox';
+import InputBase from '@material-ui/core/InputBase'
+import {addNotelable} from '../services/noteServices'
 
 export default class AddLabelSubNote extends React.Component{
     constructor(props){
@@ -19,7 +21,9 @@ export default class AddLabelSubNote extends React.Component{
             labelList:[],
             labelIdListChange:props.labelIdListChange,
             noteData:props.noteData,
-            noteRefresh:props.noteRefresh
+            noteRefresh:props.noteRefresh,
+            instanceLabel:'',
+            addNoteLabelTemporary:props.addNoteLabelTemporary
         }
         this.getLables()
     }
@@ -61,8 +65,24 @@ export default class AddLabelSubNote extends React.Component{
         this.state.labelIdListChange()
     }
     addLabelNote = (label,id) => {
-        addSubNoteLabel(id,this.state.noteData.id)
-        this.state.noteRefresh()
+        this.state.addNoteLabelTemporary(label,id)
+        addSubNoteLabel(id,this.state.noteData.id).then(response => {
+            
+        })
+        
+    }
+    onChangeInstanceLabel = (e) => {
+        this.setState({instanceLabel:e.target.value})
+    }
+    addInstanceLabel = () => {
+        if(this.state.instanceLabel){
+            addNotelable(this.state.instanceLabel).then(response => {
+                this.addLabelNote(response.data.label,response.data.id)
+                this.setState({instanceLabel:''})
+                this.state.noteRefresh()
+             })
+        }
+        
     }
     render(){
         return(
@@ -74,7 +94,7 @@ export default class AddLabelSubNote extends React.Component{
              onClick={this.handleClick}>
                  Add Label
             </MenuItem>
-        <Popover className="colorBoxRoot"
+        <Popover
             anchorOrigin={{
                 vertical: "bottom",
                 horizontal: "center",
@@ -90,7 +110,16 @@ export default class AddLabelSubNote extends React.Component{
           
           
         >
-            <div className="addLabelOnNote">Add label</div>
+            <li className="reminderHeading">Label Note</li>
+            <div className="lableAddInstanceHeading"><InputBase
+                    placeholder="enter label"
+                    value={this.state.instanceLabel}
+                    onChange={this.onChangeInstanceLabel}
+                />
+                <Button size="small" onClick={this.addInstanceLabel}>
+                                Add
+                            </Button>
+            </div>
           <div >
               
               <div>
