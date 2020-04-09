@@ -23,7 +23,8 @@ export default class LabaleSideBar extends React.Component {
         open:false,
         userID:props.userId,
         lables:[],
-        enterLable:''
+        enterLable:'',
+        containerRenderLable:props.containerRenderLable
     }
     this.getLables()
   }
@@ -55,7 +56,7 @@ export default class LabaleSideBar extends React.Component {
     deleteNotelable(labelId)
     this.getLables()
     this.getLables()
-  } 
+  }
 
   render() {
     return (
@@ -67,7 +68,7 @@ export default class LabaleSideBar extends React.Component {
         <div className="lableList">
 
             {this.state.lables.map(ele => {
-                return(<div className="lable">
+                return(<div className="lable" onClick={e => this.state.containerRenderLable(ele.label)}>
                     <LabelIcon />
                     {ele.label}
                 </div>)
