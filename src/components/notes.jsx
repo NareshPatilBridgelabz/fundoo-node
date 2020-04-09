@@ -35,7 +35,8 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import Checkbox from '@material-ui/core/Checkbox'
 import ColorBox from './colorBox'
 import AddLabelSubNote from './addLabelSubNote'
-import UnarchiveIcon from '@material-ui/icons/Unarchive';
+import UnarchiveIcon from '@material-ui/icons/Unarchive'
+import { UserConsumer } from './userContext.js'
 
 class Notes extends React.Component {
   constructor(props) {
@@ -64,6 +65,11 @@ class Notes extends React.Component {
       listdata:[],
       noteLabels:props.noteData.noteLabels
     }
+  }
+  addNoteLabelTemporary = (label,id) =>{
+    let data = {label:label,isDeleted:false,id:id,userId:this.state.noteData.userId}
+    this.state.noteLabels.push(data)
+    this.setState({noteLabels:this.state.noteLabels})
   }
   timing = [
     {
@@ -195,14 +201,14 @@ class Notes extends React.Component {
   }
   removeLabeFromNote = (labelId,index) => {
     this.state.noteLabels.splice(index,1)
-    removeNoteLabel(labelId,this.state.noteID).then(response => {if(response) {this.state.noteRefresh()
-      this.state.noteRefresh()
-    }})
+    removeNoteLabel(labelId,this.state.noteID).then(response => {if(response) {this.state.noteRefresh()}})
     
   }
   render() {
     return (
-      <div>
+      <div className={this.props.noteListView?'listView':'gridView'} >
+        
+      <div style={{width:this.state.noteListView}}>
         <Card id='notesCard' style={{backgroundColor:this.state.noteColor}}>
           <CardContent className="cardRowNote">
             <Typography color="textSecondary">
@@ -375,7 +381,7 @@ class Notes extends React.Component {
                   <MenuItem onClick={this.noteDeleteForever}>DeleteForever</MenuItem>
                   <MenuItem onClick={e => {this.noteDeleteRestore(e,false)}}>Restore</MenuItem></div>:
                   <div><MenuItem onClick={e => {this.noteDeleteRestore(e,true)}}>Delete</MenuItem>
-                  <AddLabelSubNote noteData={this.state.noteData} noteRefresh={this.state.noteRefresh}/></div>
+                  <AddLabelSubNote noteData={this.state.noteData} addNoteLabelTemporary={this.addNoteLabelTemporary} noteRefresh={this.state.noteRefresh}/></div>
                   }
                 </Menu>
               </div>
@@ -544,7 +550,8 @@ class Notes extends React.Component {
                   </Button> */}
           </Dialog>
         </div>
-
+        {/* </UserConsumer> */}
+      </div>
       </div>
     )
   }
