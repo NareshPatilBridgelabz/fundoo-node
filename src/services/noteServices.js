@@ -178,3 +178,15 @@ export async function addSubNoteLabel(lableId,noteId){
         return err
     }
 }
+export async function getNotesListByLabel(label){
+    try{
+        let data = {}
+        const response = await axios.post(process.env.REACT_APP_API_URL+'notes/getNotesListByLabel/'+label,data,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
