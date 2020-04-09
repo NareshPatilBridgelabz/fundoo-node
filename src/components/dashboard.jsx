@@ -34,7 +34,7 @@ import TextField from "@material-ui/core/TextField";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import { getUserNote } from "../services/noteServices";
 import { setUserNote } from "../services/noteServices";
-import { removeNoteLabel } from "../services/noteServices";
+import { getNotesListByLabel } from "../services/noteServices";
 import AccessAlarmsIcon from "@material-ui/icons/AccessAlarms";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -43,8 +43,11 @@ import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import ColorBox from './colorBox'
 import LableSideBar from './lableSideBar'
 import AddLabelNote from './addLabelNote'
+import LabelIcon from '@material-ui/icons/Label';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ViewModuleIcon from '@material-ui/icons/ViewModule';
+import ViewStreamIcon from '@material-ui/icons/ViewStream';
 
 // import Appbar from './appBar'
 import AcUnitIcon from "@material-ui/icons/AcUnit";
@@ -69,6 +72,7 @@ class Dashboard extends Component {
       description: "",
       reminderMain: "",
       allNotes: [],
+      allNotesTemp: [],
       displayReminder: "",
       displayDatePick: "none",
       date: "",
@@ -80,11 +84,54 @@ class Dashboard extends Component {
       isArchive: false,
       noteColor:'',
       openBackDrop:'false',
-      labelIdList:[]
+      labelIdList:[],
+      labelFilter:[],
+      noteListView:true,
+      searchNote:''
     };
     this.userNoteRefresh();
   }
+  onChangeSearchNote = e => {
+    this.setState({searchNote:e.target.value})
+    if(e.target.value === ''){
+      this.setState({allNotes:[]})
+      return
+    }
+    let filterSearch = [] 
+    let flag = false
+    
+     this.state.allNotesTemp.map((allnote) => {
+      console.log(allnote.title,)
+      if (!allnote.isDeleted && (allnote.title.startsWith(e.target.value) || allnote.description.startsWith(e.target.value))) {
+        filterSearch.push(allnote)
+        flag = true 
+      }
+    });
+  
+    // console.log("note Temp" + this.state.allNotes)
+    // console.log("note Temp" + this.state.allNotesTemp)
+    flag ? this.setState({allNotes:filterSearch}) :  this.setState({allNotes:this.state.allNotesTemp})
+    
+  }
 
+  containerRenderLable =async (label) => {
+    this.setState({containerRender:label})
+    let labelNote
+    await getNotesListByLabel(label).then(response => labelNote=response.data.data.data)
+    
+    this.state.labelFilter = labelNote.map((allnote) => {
+      if (!allnote.isDeleted) {
+        return (
+          <Note
+            key={allnote.id}
+            noteData={allnote}
+            noteRefresh={this.userNoteRefresh}
+          />
+        );
+      }
+    });
+    this.setState({labelFilter:this.state.labelFilter})
+  }
   labelIdListChange = () => {
     this.setState({labelIdList:this.state.labelIdList})
   }
@@ -121,6 +168,7 @@ class Dashboard extends Component {
       if (response.data.data.data) {
         this.setState({openBackDrop:false})
         this.setState({ allNotes: response.data.data.data });
+        this.setState({ allNotesTemp: response.data.data.data });
       }
     });
   };
@@ -156,7 +204,7 @@ class Dashboard extends Component {
     this.props.history.push("/login");
   };
   searchBarHandel = () => {
-    alert("click");
+    // alert("click");
   };
   remiderHandler = (event) => {
     this.setState({
@@ -277,23 +325,25 @@ class Dashboard extends Component {
   onClickChanageColor = (event) => {
     this.setState({noteColor:event.target.getAttribute('color')})
   }
+  changeNoteListView = () => {
+    this.setState({noteListView:!this.state.noteListView})
+  }
   render() {
-    let arcObj = this.state.allNotes.map((allnote) => {
+    let arcObj = []
+    this.state.allNotes.filter((allnote) => {
       if (!allnote.isDeleted && allnote.isArchived) {
-        return (
-          <Note
+        arcObj.push(<Note
             key={allnote.id}
             noteData={allnote}
             noteRefresh={this.userNoteRefresh}
-          />
-        );
+          />)
       }
-      return null;
     });
 
-    let trashObj = this.state.allNotes.map((allnote) => {
+    let trashObj = [] 
+    this.state.allNotes.filter((allnote) => {
       if (allnote.isDeleted) {
-        return (
+        trashObj.push(
           <Note
             key={allnote.id}
             noteData={allnote}
@@ -301,11 +351,11 @@ class Dashboard extends Component {
           />
         );
       }
-      return null;
     });
-    let reminderObj = this.state.allNotes.map((allnote) => {
+    let reminderObj = []
+    this.state.allNotes.filter((allnote) => {
       if (allnote.reminder.length > 0 && !allnote.isDeleted) {
-        return (
+        reminderObj.push(
           <Note
             key={allnote.id}
             noteData={allnote}
@@ -313,7 +363,7 @@ class Dashboard extends Component {
           />
         );
       }
-      return null;
+      
     });
 
     return (
@@ -323,7 +373,9 @@ class Dashboard extends Component {
             <IconButton onClick={this.sidebarActive}>
               <MenuIcon />
             </IconButton>
-            <img src="https://www.gstatic.com/images/branding/product/1x/keep_48dp.png" />
+            {this.state.containerRender !== 'createnote'?
+              <div className='navigationSidebar'>{this.state.containerRender}</div>:
+              <img src="https://www.gstatic.com/images/branding/product/1x/keep_48dp.png" />}
           </div>
           <div className="searchBox">
             <Card id="searchbar">
@@ -332,7 +384,7 @@ class Dashboard extends Component {
                   <SearchIcon />
                 </IconButton>
               </Tooltip>
-              <InputBase placeholder="Search" fullWidth />
+              <InputBase placeholder="Search" value={this.state.searchNote} onChange={this.onChangeSearchNote} fullWidth />
             </Card>
           </div>
           <div className="buttonBundle1">
@@ -345,8 +397,8 @@ class Dashboard extends Component {
             <IconButton>
               <RefreshIcon />
             </IconButton>
-            <IconButton className="hideIcon">
-              <ListAltIcon />
+            <IconButton className="hideIcon" onClick={this.changeNoteListView}>
+              {this.state.noteListView?<ViewModuleIcon />:<ViewStreamIcon />}
             </IconButton>
             <IconButton>
               <SettingsIcon />
@@ -420,11 +472,11 @@ class Dashboard extends Component {
               <EditIcon />
               Edit Lable
             </div> */}
-            <LableSideBar />
+            <LableSideBar containerRenderLable={this.containerRenderLable} />
             <Divider />
             <div
               className="sidebar_component"
-              data="archivenote"
+              data="archive"
               onClick={this.changeMainContainer}
             >
               <ArchiveIcon />
@@ -432,7 +484,7 @@ class Dashboard extends Component {
             </div>
             <div
               className="sidebar_component"
-              data="trashnote"
+              data="trash"
               onClick={this.changeMainContainer}
             >
               <DeleteSweepIcon />
@@ -695,7 +747,7 @@ class Dashboard extends Component {
                     </CardActions>
                   </Card>
                 </div>
-                <div className="notes">
+                <div className="notes" >
                   {this.state.allNotes.map((objNote) => {
                     if (!objNote.isDeleted && !objNote.isArchived) {
                       return (
@@ -703,20 +755,25 @@ class Dashboard extends Component {
                           key={objNote.id}
                           noteData={objNote}
                           noteRefresh={this.userNoteRefresh}
+                          noteListView={this.state.noteListView}
+                          style={{width:'40%'}}
                       />
                       );
                     }
                   })}
                 </div>
               </div>
-            ) : this.state.containerRender === "archivenote" ? (
-              <div className="notes">{arcObj}</div>
-            ) : this.state.containerRender === "trashnote" ? (
-              <div className="notes">{trashObj}</div>
+            ) : this.state.containerRender === "archive" ? (
+              arcObj.length > 0?<div className="notes">{arcObj}</div>:<div className="emptySidebarMsgContainer"><div className="emptySidebarMsg"><ArchiveIcon /><div>Your archived notes appear here</div></div></div>
+            ) : this.state.containerRender === "trash" ? (
+              trashObj.length > 0?<div className="notes">{trashObj}</div>:<div className="emptySidebarMsgContainer"><div className="emptySidebarMsgContainer"><DeleteSweepIcon /><div>No notes in Trash</div></div></div>
             ) : this.state.containerRender === "reminder" ? (
-              <div className="notes">{reminderObj}</div>
-              // console.log(this.state.lables)
-            ) : <div> </div> }
+              reminderObj.length > 0?<div className="notes">{reminderObj}</div>:<div className="emptySidebarMsgContainer"><div className="emptySidebarMsg"><NotificationsNoneIcon /><div>Notes with upcoming reminders appear here</div></div></div>
+            ) : (
+              this.state.labelFilter.length > 0?<div className="notes">{this.state.labelFilter}</div>:<div className="emptySidebarMsgContainer"><div className="emptySidebarMsg"><LabelIcon /><div>No notes with this label yet</div></div></div>
+            ) }
+
+            
             
           </div>
         </div>
