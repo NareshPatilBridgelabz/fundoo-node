@@ -35,6 +35,7 @@ import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import { getUserNote } from "../services/noteServices";
 import { setUserNote } from "../services/noteServices";
 import { getNotesListByLabel } from "../services/noteServices";
+import { uploadUserProfile } from "../services/userServices";
 import AccessAlarmsIcon from "@material-ui/icons/AccessAlarms";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -48,6 +49,8 @@ import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import ViewStreamIcon from '@material-ui/icons/ViewStream';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 // import Appbar from './appBar'
 import AcUnitIcon from "@material-ui/icons/AcUnit";
@@ -87,33 +90,46 @@ class Dashboard extends Component {
       labelIdList:[],
       labelFilter:[],
       noteListView:true,
-      searchNote:''
-    };
+      searchNote:'',
+      profileImage : JSON.parse(localStorage.getItem('userProfileImage')),
+      snackbarOpen:false,
+      snackbarMsg:'',
+      snackbarMsgType:''
+    }
     this.userNoteRefresh();
   }
+
+
   onChangeSearchNote = e => {
     this.setState({searchNote:e.target.value})
-    if(e.target.value === ''){
-      this.setState({allNotes:[]})
-      return
-    }
+    
     let filterSearch = [] 
-    let flag = false
     
      this.state.allNotesTemp.map((allnote) => {
       console.log(allnote.title,)
       if (!allnote.isDeleted && (allnote.title.startsWith(e.target.value) || allnote.description.startsWith(e.target.value))) {
         filterSearch.push(allnote)
-        flag = true 
       }
     });
   
-    // console.log("note Temp" + this.state.allNotes)
-    // console.log("note Temp" + this.state.allNotesTemp)
-    flag ? this.setState({allNotes:filterSearch}) :  this.setState({allNotes:this.state.allNotesTemp})
+    e.target.value ? filterSearch.length > 0 ? this.setState({allNotes:filterSearch}) :  this.setState({allNotes:filterSearch,snackbarOpen:true,snackbarMsgType:'error',snackbarMsg:'Note Not Available'})
+     
+    :  this.setState({allNotes:this.state.allNotesTemp})
     
   }
 
+  onChangeProfile = (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+
+      let form_data = new FormData()
+      form_data.append('file',event.target.files[0])
+      uploadUserProfile(form_data).then(response => {
+        this.setState({profileImage:response.data.status.imageUrl})
+        localStorage.setItem('userProfileImage',response.data.status.imageUrl)
+      })
+  }
+    
   containerRenderLable =async (label) => {
     this.setState({containerRender:label})
     let labelNote
@@ -176,12 +192,12 @@ class Dashboard extends Component {
   handleClick = (event) => {
     this.setState({
       menuAnchor: event.currentTarget,
-      menuOpen: !this.state.menuOpen,
+      menuOpen: !this.state.menuOpen
     });
   };
   handleClose = (event) => {
     this.setState({
-      menuAnchor: event.currentTarget,
+      // menuAnchor: event.currentTarget,
       menuOpen: !this.state.menuOpen,
     });
   };
@@ -328,6 +344,9 @@ class Dashboard extends Component {
   changeNoteListView = () => {
     this.setState({noteListView:!this.state.noteListView})
   }
+  snackbarClose = () =>  {
+    this.setState({snackbarOpen:false})
+  }
   render() {
     let arcObj = []
     this.state.allNotes.filter((allnote) => {
@@ -368,14 +387,23 @@ class Dashboard extends Component {
 
     return (
       <div>
+        <Snackbar open={this.state.snackbarOpen} autoHideDuration={6000} onClose={this.snackbarClose}>
+          <Alert onClose={this.snackbarClose} severity= {this.state.snackbarMsgType}>
+            {this.state.snackbarMsg}
+          </Alert>
+        </Snackbar>
         <div className="headerbar">
           <div className="header_left">
             <IconButton onClick={this.sidebarActive}>
               <MenuIcon />
             </IconButton>
-            {this.state.containerRender !== 'createnote'?
-              <div className='navigationSidebar'>{this.state.containerRender}</div>:
-              <img src="https://www.gstatic.com/images/branding/product/1x/keep_48dp.png" />}
+            {this.state.containerRender !== "createnote" ? (
+              <div className="navigationSidebar">
+                {this.state.containerRender}
+              </div>
+            ) : (
+              <img src="https://www.gstatic.com/images/branding/product/1x/keep_48dp.png" />
+            )}
           </div>
           <div className="searchBox">
             <Card id="searchbar">
@@ -384,7 +412,12 @@ class Dashboard extends Component {
                   <SearchIcon />
                 </IconButton>
               </Tooltip>
-              <InputBase placeholder="Search" value={this.state.searchNote} onChange={this.onChangeSearchNote} fullWidth />
+              <InputBase
+                placeholder="Search"
+                value={this.state.searchNote}
+                onChange={this.onChangeSearchNote}
+                fullWidth
+              />
             </Card>
           </div>
           <div className="buttonBundle1">
@@ -394,15 +427,19 @@ class Dashboard extends Component {
             >
               <SearchIcon />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={this.userNoteRefresh}>
               <RefreshIcon />
             </IconButton>
             <IconButton className="hideIcon" onClick={this.changeNoteListView}>
-              {this.state.noteListView?<ViewModuleIcon />:<ViewStreamIcon />}
+              {this.state.noteListView ? (
+                <ViewModuleIcon />
+              ) : (
+                <ViewStreamIcon />
+              )}
             </IconButton>
-            <IconButton>
+            {/* <IconButton>
               <SettingsIcon />
-            </IconButton>
+            </IconButton> */}
           </div>
           <div className="header_userProfile">
             <IconButton className="hideIcon">
@@ -412,11 +449,21 @@ class Dashboard extends Component {
               // color='primary'
               size="small"
             >
-              <img
-                src={userLogo}
-                onClick={this.handleClick}
-                id="profile_logo"
-              />
+              {this.state.profileImage ? (
+                <img
+                  src={
+                    process.env.REACT_APP_DOMAIN_URL + this.state.profileImage
+                  }
+                  onClick={this.handleClick}
+                  className="profile_logo"
+                />
+              ) : (
+                <img
+                  src={userLogo}
+                  onClick={this.handleClick}
+                  className="profile_logo"
+                />
+              )}
             </IconButton>
           </div>
           <Menu
@@ -434,7 +481,20 @@ class Dashboard extends Component {
             open={this.state.menuOpen}
             onClose={this.handleClose}
           >
-            <MenuItem>Profile</MenuItem>
+            <input
+              id="myInput"
+              type="file"
+              ref={(ref) => (this.upload = ref)}
+              style={{ display: "none" }}
+              onChange={this.onChangeProfile.bind(this)}
+            />
+            <MenuItem
+              onClick={() => {
+                this.upload.click();
+              }}
+            >
+              Profile
+            </MenuItem>
             <MenuItem>My account</MenuItem>
             <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
           </Menu>
@@ -489,11 +549,10 @@ class Dashboard extends Component {
             >
               <DeleteSweepIcon />
               Trash
-
             </div>
           </div>
 
-{/* CONDITIONAL RENDERING */}
+          {/* CONDITIONAL RENDERING */}
           <div
             className="dashboard_container"
             style={{
@@ -503,11 +562,11 @@ class Dashboard extends Component {
             {this.state.containerRender === "createnote" ? (
               <div>
                 <div className="cardRow">
-                  <Card style={{backgroundColor:this.state.noteColor}}>
-                    <CardContent >
+                  <Card style={{ backgroundColor: this.state.noteColor }}>
+                    <CardContent>
                       <Typography color="textSecondary">
                         <InputBase
-                          className='fontStyle_main'
+                          className="fontStyle_main"
                           inputProps={{
                             placeholder: "Title",
                             "data-state": "Data State 1",
@@ -601,12 +660,16 @@ class Dashboard extends Component {
 
                       <div className="lableInNote">
                         {this.state.labelIdList.map((e, index) => {
-                          return(<div >
-                            <div>{e.label}</div>
-                            <IconButton size="small">
-                              <HighlightOffIcon onClick={e => this.labelIdListRemove(index)}/>
-                            </IconButton>
-                          </div>)
+                          return (
+                            <div>
+                              <div>{e.label}</div>
+                              <IconButton size="small">
+                                <HighlightOffIcon
+                                  onClick={(e) => this.labelIdListRemove(index)}
+                                />
+                              </IconButton>
+                            </div>
+                          );
                         })}
                       </div>
                     </CardContent>
@@ -707,7 +770,7 @@ class Dashboard extends Component {
                           <IconButton>
                             <PersonAddIcon />
                           </IconButton>
-                             <ColorBox changeColor={this.onClickChanageColor}/>
+                          <ColorBox changeColor={this.onClickChanageColor} />
                           <IconButton>
                             <AddPhotoAlternateIcon />
                           </IconButton>
@@ -735,7 +798,10 @@ class Dashboard extends Component {
                             open={this.state.MoreMenuOpen}
                             onClose={this.moreMenuHandler}
                           >
-                            <AddLabelNote labelIdList={this.state.labelIdList} labelIdListChange={this.labelIdListChange}/>
+                            <AddLabelNote
+                              labelIdList={this.state.labelIdList}
+                              labelIdListChange={this.labelIdListChange}
+                            />
                             <MenuItem>Add Drawing</MenuItem>
                             <MenuItem>Show checkboxes</MenuItem>
                           </Menu>
@@ -747,7 +813,7 @@ class Dashboard extends Component {
                     </CardActions>
                   </Card>
                 </div>
-                <div className="notes" >
+                <div className="notes">
                   {this.state.allNotes.map((objNote) => {
                     if (!objNote.isDeleted && !objNote.isArchived) {
                       return (
@@ -756,32 +822,62 @@ class Dashboard extends Component {
                           noteData={objNote}
                           noteRefresh={this.userNoteRefresh}
                           noteListView={this.state.noteListView}
-                          style={{width:'40%'}}
-                      />
+                          style={{ width: "40%" }}
+                        />
                       );
                     }
                   })}
                 </div>
               </div>
             ) : this.state.containerRender === "archive" ? (
-              arcObj.length > 0?<div className="notes">{arcObj}</div>:<div className="emptySidebarMsgContainer"><div className="emptySidebarMsg"><ArchiveIcon /><div>Your archived notes appear here</div></div></div>
+              arcObj.length > 0 ? (
+                <div className="notes">{arcObj}</div>
+              ) : (
+                <div className="emptySidebarMsgContainer">
+                  <div className="emptySidebarMsg">
+                    <ArchiveIcon />
+                    <div>Your archived notes appear here</div>
+                  </div>
+                </div>
+              )
             ) : this.state.containerRender === "trash" ? (
-              trashObj.length > 0?<div className="notes">{trashObj}</div>:<div className="emptySidebarMsgContainer"><div className="emptySidebarMsgContainer"><DeleteSweepIcon /><div>No notes in Trash</div></div></div>
+              trashObj.length > 0 ? (
+                <div className="notes">{trashObj}</div>
+              ) : (
+                <div className="emptySidebarMsgContainer">
+                  <div className="emptySidebarMsgContainer">
+                    <DeleteSweepIcon />
+                    <div>No notes in Trash</div>
+                  </div>
+                </div>
+              )
             ) : this.state.containerRender === "reminder" ? (
-              reminderObj.length > 0?<div className="notes">{reminderObj}</div>:<div className="emptySidebarMsgContainer"><div className="emptySidebarMsg"><NotificationsNoneIcon /><div>Notes with upcoming reminders appear here</div></div></div>
+              reminderObj.length > 0 ? (
+                <div className="notes">{reminderObj}</div>
+              ) : (
+                <div className="emptySidebarMsgContainer">
+                  <div className="emptySidebarMsg">
+                    <NotificationsNoneIcon />
+                    <div>Notes with upcoming reminders appear here</div>
+                  </div>
+                </div>
+              )
+            ) : this.state.labelFilter.length > 0 ? (
+              <div className="notes">{this.state.labelFilter}</div>
             ) : (
-              this.state.labelFilter.length > 0?<div className="notes">{this.state.labelFilter}</div>:<div className="emptySidebarMsgContainer"><div className="emptySidebarMsg"><LabelIcon /><div>No notes with this label yet</div></div></div>
-            ) }
-
-            
-            
+              <div className="emptySidebarMsgContainer">
+                <div className="emptySidebarMsg">
+                  <LabelIcon />
+                  <div>No notes with this label yet</div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
-        <Backdrop style={{zIndex: 1}}  open={this.state.openBackDrop}>
-              <CircularProgress color="inherit" />
-            </Backdrop>
+        <Backdrop style={{ zIndex: 1 }} open={this.state.openBackDrop}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
       </div>
-      
     );
   }
 }
