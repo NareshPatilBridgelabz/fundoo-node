@@ -175,41 +175,15 @@ class Login extends Component {
     const classes = { useStyles }
 
     return (
-      <div
-        className='card_style'
-        style={{
-          backgroundImage:
-            'url(https://image.freepik.com/free-photo/table-made-with-planks_1253-2.jpg)',
-          backgroundSize: '100% 100%'
-        }}
-      >
-        <Container>
-          <Row>
-            <Col sm={4}>{/* One of three columns */}</Col>
-            <Col sm={4} style={{top:'50px'}}>
-              <MuiThemeProvider theme={theme}>
-                <Card
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'left-center',
-                    flexDirection: 'column',
-                    height: '50vh',
-                    boxShadow: '0px 0px 10px 2px',
-                    marginTop: '100px',
-                    paddingBottom: '10px'
-                  }}
-                >
-                  <div className='mainReg'>
-                    <div maxWidth='5px' fixed>
-                      <form className='formApi' onSubmit={this.onSubmit}>
+      <div className='login_card_style'  >
+                  <div className='loginMainReg'>
+                      <form className='loginFieldContainer' onSubmit={this.onSubmit}>
                         <h1 style = {{
-                          paddingLeft: '30px'
+                          paddingLeft: '12px',
+                          marginBottom:'28px'
                         }}> Login page </h1>
 
                         <Snackbar
-                          style={{
-                            backgroundColor: 'teal'
-                          }}
                           anchorOrigin={{
                             vertical: 'bottom',
                             horizontal: 'center'
@@ -225,12 +199,6 @@ class Login extends Component {
                             >
                               <CloseIcon />
                             </IconButton>
-                          }
-                          message={
-                            <span id='message-id'>
-                              {' '}
-                              {this.state.snackbarMessage}{' '}
-                            </span>
                           }
                         >
                           <Alert
@@ -253,7 +221,6 @@ class Login extends Component {
                             onChange={this.onchangeEmail}
                           />
                         </div>
-                        <br></br>
 
                         <div>
                           <TextField
@@ -269,9 +236,8 @@ class Login extends Component {
                             className={classes.paper}
                           />
                         </div>
-                        <br></br>
 
-                        <div className='row'>
+                        <div>
                           <div className='col s6 Reg-button'>
                             <Button
                               variant='outlined'
@@ -289,7 +255,8 @@ class Login extends Component {
                           </div>
                         </div>
                       </form>
-                      <div className='cardBottom'>
+                      <div className='loginCardBottom'>
+                              <div>
                         <Link
                           id='forgotPwdLink'
                           component='button'
@@ -312,14 +279,10 @@ class Login extends Component {
                         >
                           register now
                         </Link>
+                        </div>
                       </div>
-                    </div>
+
                   </div>
-                </Card>
-              </MuiThemeProvider>
-            </Col>
-          </Row>
-        </Container>
       </div>
     )
   }
