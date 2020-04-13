@@ -29,6 +29,8 @@ import {changesColorNotes} from '../services/noteServices'
 import {archiveNote} from '../services/noteServices'
 import {deleteNoteForever} from '../services/noteServices'
 import {removeNoteLabel} from '../services/noteServices'
+import {addcollaboratorsNotes} from '../services/noteServices'
+import {removeCollaboratorsNotes} from '../services/noteServices'
 import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
@@ -37,6 +39,7 @@ import ColorBox from './colorBox'
 import AddLabelSubNote from './addLabelSubNote'
 import UnarchiveIcon from '@material-ui/icons/Unarchive'
 import { UserConsumer } from './userContext.js'
+import Collaborator from './collaborator'
 
 class Notes extends React.Component {
   constructor(props) {
@@ -63,7 +66,8 @@ class Notes extends React.Component {
       isArchive: props.noteData.isArchived,
       noteDelete: props.noteData.isDeleted,
       listdata:[],
-      noteLabels:props.noteData.noteLabels
+      noteLabels:props.noteData.noteLabels,
+      collaborators:props.noteData.collaborators
     }
   }
   addNoteLabelTemporary = (label,id) =>{
@@ -202,7 +206,19 @@ class Notes extends React.Component {
   removeLabeFromNote = (labelId,index) => {
     this.state.noteLabels.splice(index,1)
     removeNoteLabel(labelId,this.state.noteID).then(response => {if(response) {this.state.noteRefresh()}})
-    
+  }
+  clickOnUser = (user) => {
+    console.log('user',user)
+    this.state.collaborators.push(user)
+    this.setState({ collaborators: this.state.collaborators});
+    addcollaboratorsNotes(user,this.state.noteID)
+  };
+  removeCollab = (CID) => {
+    let filterCollab = this.state.collaborators.filter(collab => {
+      return collab.userId !==  CID
+    })
+    removeCollaboratorsNotes(CID,this.state.noteID)
+    this.setState({collaborators:filterCollab})
   }
   render() {
     return (
@@ -271,6 +287,13 @@ class Notes extends React.Component {
                           
                         })}
                   </div>
+
+                  <div className="collabAtNote">
+                    {this.state.collaborators.map(collab => {
+                      return(<div>{collab.firstName.charAt(0)}</div>)
+                    })}
+                  </div>
+
           </CardContent>
           <CardActions>
             <div className="cardActions">
@@ -341,16 +364,10 @@ class Notes extends React.Component {
                           </Button>
                         </div>
                 </Menu>
-                <IconButton >
-                  <PersonAddIcon/>
-                </IconButton>
-                
-                   <ColorBox changeColor={this.onClickChanageColor}/>
-                
+                  <Collaborator noteData={this.state.noteData} collaborators={this.state.collaborators} clickOnUser={this.clickOnUser.bind(this)} removeCollab={this.removeCollab.bind(this)}/>
+                  <ColorBox changeColor={this.onClickChanageColor}/>
                 <IconButton>
-
                   <AddPhotoAlternateIcon/>
-
                 </IconButton>
 
                 <IconButton onClick={this.onClickArchive}>
@@ -364,7 +381,7 @@ class Notes extends React.Component {
                   className="subNotesMoreMenu"
                   style={{
                   top: "50px"
-                }}
+              }}
                   anchorOrigin={{
                   vertical: 'bottom',
                   horizontal: 'center'
