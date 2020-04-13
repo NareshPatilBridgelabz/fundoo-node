@@ -1,6 +1,7 @@
 import axios from "axios";
 import userApiConstants from "../apiConstants/userApiConstants";
 let userData = JSON.parse(localStorage.getItem("userDetails"))
+
 export async function getUserNote(){
     try{
         const response = await axios.get(process.env.REACT_APP_NOTES_URL + userApiConstants.getNotes, {
@@ -182,6 +183,30 @@ export async function getNotesListByLabel(label){
     try{
         let data = {}
         const response = await axios.post(process.env.REACT_APP_API_URL+'notes/getNotesListByLabel/'+label,data,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+
+export async function addcollaboratorsNotes(user,noteID){
+    try{
+        const response = await axios.post(process.env.REACT_APP_NOTES_URL+noteID+'/AddcollaboratorsNotes',user,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+
+export async function removeCollaboratorsNotes(userID,noteID){
+    try{
+        const response = await axios.delete(process.env.REACT_APP_NOTES_URL+noteID+'/removeCollaboratorsNotes'+'/'+userID,{
             headers: {
                 Authorization:userData.id
         }});
