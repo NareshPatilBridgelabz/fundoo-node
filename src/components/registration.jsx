@@ -186,33 +186,9 @@ class Registration extends Component {
     const classes = { useStyles }
 
     return (
-      <div className='card_style' style={{
-        
-        backgroundImage:
-          'url(https://previews.123rf.com/images/mazirama/mazirama1408/mazirama140800413/30659837-register-illustration-with-tablet-computer-on-blue-background.jpg)',
-          backgroundSize: '100% 100%'
-        
-      }}>
-        <Container>
-          <Row>
-            <Col sm={8}>{/* One of three columns */}</Col>
-            <Col sm={4} style={{top:'60px'}}>
-              <Card
-                style={{
-                  display: 'flex',
-                  justifyContent: 'left-center',
-                  flexDirection: 'column',
-                  height: '68vh',
-                  boxShadow: '0px 0px 10px 2px',
-                  marginTop: '100px',
-                  paddingBottom: '10px',
-                  backgroundImage:
-                    'url(https://images.wallpapersden.com/image/download/mix-colour-background_64813_3840x2160.jpg)',
-                  backgroundSize: '150% 150%',
-                }}
-              >
+      <div className='card_style'>
+              
                 <div className='mainReg'>
-                  <div maxWidth='5px' fixed>
                     <form className='formApi' onSubmit={this.onSubmit}>
                       <h1 className=''> </h1>
                       
@@ -362,13 +338,8 @@ class Registration extends Component {
                           </Button>
                         </div>
                       </div>
-                    </form>
-                  </div>
+                    </form>                  
                 </div>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
       </div>
     )
   }
