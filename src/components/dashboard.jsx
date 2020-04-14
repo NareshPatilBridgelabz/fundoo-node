@@ -12,26 +12,15 @@ import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
 import WbIncandescentIcon from "@material-ui/icons/WbIncandescent";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
-import EditIcon from "@material-ui/icons/Edit";
 import ArchiveIcon from "@material-ui/icons/Archive";
-import SettingsIcon from "@material-ui/icons/Settings";
-import ListAltIcon from "@material-ui/icons/ListAlt";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import DialpadIcon from "@material-ui/icons/Dialpad";
 import userLogo from "../assets/svg/Avatar.svg";
 import Typography from "@material-ui/core/Typography";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import ColorLensIcon from "@material-ui/icons/ColorLens";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
-import AddAlertIcon from "@material-ui/icons/AddAlert";
-import WatchLaterIcon from "@material-ui/icons/WatchLater";
-import PlaceIcon from "@material-ui/icons/Place";
 import Note from "./notes";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import TextField from "@material-ui/core/TextField";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import { getUserNote } from "../services/noteServices";
 import { setUserNote } from "../services/noteServices";
 import { getNotesListByLabel } from "../services/noteServices";
@@ -51,10 +40,8 @@ import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import ViewStreamIcon from '@material-ui/icons/ViewStream';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-
-// import Appbar from './appBar'
-import AcUnitIcon from "@material-ui/icons/AcUnit";
-// import Header from './dashbord/header'
+import CollaboratorNewNote from './collaboratorNewNote'
+import ReminderNewNote from './reminderNewNote'
 
 class Dashboard extends Component {
   constructor(props) {
@@ -66,8 +53,6 @@ class Dashboard extends Component {
       sideBarOpen: false,
       sidebarLeft: "0%",
       mainContainer: "80%",
-      reminderMenuAnchor: null,
-      reminderMenuOpen: false,
       MoreMenuAnchor: null,
       MoreMenuOpen: false,
       noteCardBackDisplay: "none",
@@ -76,10 +61,6 @@ class Dashboard extends Component {
       reminderMain: "",
       allNotes: [],
       allNotesTemp: [],
-      displayReminder: "",
-      displayDatePick: "none",
-      date: "",
-      time: "",
       reminderDisplay: "none",
       list: [],
       listMain: "",
@@ -94,28 +75,35 @@ class Dashboard extends Component {
       profileImage : JSON.parse(localStorage.getItem('userProfileImage')),
       snackbarOpen:false,
       snackbarMsg:'',
-      snackbarMsgType:''
+      snackbarMsgType:'',
+      collaborators:[],
+      userData:JSON.parse(localStorage.getItem('userDetails'))
     }
     this.userNoteRefresh();
   }
 
+  addCollab = (user) => {
+    this.state.collaborators.push(user)
+    this.setState({ collaborators: this.state.collaborators});
+  };
+  removeCollab = (CID) => {
+    let filterCollab = this.state.collaborators.filter(collab => {
+      return collab.userId !==  CID
+    })
+    this.setState({collaborators:filterCollab})
+  }
 
   onChangeSearchNote = e => {
     this.setState({searchNote:e.target.value})
-    
     let filterSearch = [] 
-    
      this.state.allNotesTemp.map((allnote) => {
       console.log(allnote.title,)
       if (!allnote.isDeleted && (allnote.title.startsWith(e.target.value) || allnote.description.startsWith(e.target.value))) {
         filterSearch.push(allnote)
       }
     });
-  
     e.target.value ? filterSearch.length > 0 ? this.setState({allNotes:filterSearch}) :  this.setState({allNotes:filterSearch,snackbarOpen:true,snackbarMsgType:'error',snackbarMsg:'Note Not Available'})
-     
     :  this.setState({allNotes:this.state.allNotesTemp})
-    
   }
 
   onChangeProfile = (event) => {
@@ -160,24 +148,6 @@ class Dashboard extends Component {
     this.state.containerRender = event.target.getAttribute("data");
     this.setState({ containerRender: this.state.containerRender });
   };
-  timing = [
-    {
-      value: "morning8:00AM",
-      label: "morning     8:00 AM",
-    },
-    {
-      value: "afternoon1:00PM",
-      label: "afternoon   1:00 PM",
-    },
-    {
-      value: "evening4:00PM",
-      label: "evening     4:00 PM",
-    },
-    {
-      value: "night8:00PM",
-      label: "night       8:00 PM",
-    },
-  ];
   userNoteRefresh = () => {
     this.setState({openBackDrop:TextTrackCue})
     getUserNote().then((response) => {
@@ -188,17 +158,10 @@ class Dashboard extends Component {
       }
     });
   };
-
   handleClick = (event) => {
     this.setState({
       menuAnchor: event.currentTarget,
       menuOpen: !this.state.menuOpen
-    });
-  };
-  handleClose = (event) => {
-    this.setState({
-      // menuAnchor: event.currentTarget,
-      menuOpen: !this.state.menuOpen,
     });
   };
   sidebarActive = () => {
@@ -213,20 +176,10 @@ class Dashboard extends Component {
       this.setState({ mainContainer: "100%" });
     }
   };
-
   handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userDetails");
     this.props.history.push("/login");
-  };
-  searchBarHandel = () => {
-    // alert("click");
-  };
-  remiderHandler = (event) => {
-    this.setState({
-      reminderMenuAnchor: event.currentTarget,
-      reminderMenuOpen: !this.state.reminderMenuOpen,
-    });
   };
   moreMenuHandler = (event) => {
     this.setState({
@@ -235,7 +188,6 @@ class Dashboard extends Component {
     });
   };
   addNote = () => {
-    // label list
       let id = []
       this.state.labelIdList.map(e => { id.push(e.id) })
 
@@ -248,6 +200,7 @@ class Dashboard extends Component {
       form_data.append("isArchived", this.state.isArchive);
       form_data.append("color", this.state.noteColor);
       form_data.append("labelIdList", JSON.stringify(id));
+      form_data.append("collaberators", JSON.stringify(this.state.collaborators));
 
       setUserNote(form_data).then((response) => {
         if (response) {
@@ -282,36 +235,12 @@ class Dashboard extends Component {
   onClickCheckList = () => {
     this.setState({ diplayCheckBox: this.state.diplayCheckBox ? "" : "none" });
   };
-  clickPickDate = () => {
-    this.setState({
-      displayReminder: this.state.displayReminder === "" ? "none" : "",
-    });
-    this.setState({
-      displayDatePick: this.state.displayDatePick === "" ? "none" : "",
-    });
-  };
-  handleChangeDate = (event) => {
-    this.setState({ date: event.target.value });
-  };
-  handleChangeTime = (event) => {
-    this.setState({ time: event.currentTarget.dataset.value });
-  };
-  setReminderOnclick = (event) => {
-    let time = "";
-    let date = new Date();
-    if (event.target.getAttribute("time")) {
-      time = new Date(
-        date.setDate(
-          date.getDate() + parseInt(event.target.getAttribute("time"))
-        )
-      ).toString();
-    } else {
-      time = new Date(this.state.date).toString();
-    }
-    this.setState({ reminderMain: time });
+  reminderMainSet = (data) => {
+    this.setState({reminderMain:data})
     this.setState({ reminderDisplay: "flex" });
-    this.setState({ reminderMenuOpen: !this.state.reminderMenuOpen });
-  };
+  }
+  
+  
   reminderClose = () => {
     this.setState({ reminderDisplay: "none" });
     this.setState({ reminderMain: "" });
@@ -384,7 +313,6 @@ class Dashboard extends Component {
       }
       
     });
-
     return (
       <div>
         <Snackbar open={this.state.snackbarOpen} autoHideDuration={6000} onClose={this.snackbarClose}>
@@ -437,16 +365,12 @@ class Dashboard extends Component {
                 <ViewStreamIcon />
               )}
             </IconButton>
-            {/* <IconButton>
-              <SettingsIcon />
-            </IconButton> */}
           </div>
           <div className="header_userProfile">
             <IconButton className="hideIcon">
               <DialpadIcon />
             </IconButton>
-            <IconButton // variant='contained'
-              // color='primary'
+            <IconButton 
               size="small"
             >
               {this.state.profileImage ? (
@@ -479,7 +403,7 @@ class Dashboard extends Component {
             anchorEl={this.state.menuAnchor}
             keepMounted
             open={this.state.menuOpen}
-            onClose={this.handleClose}
+            onClose={this.handleClick}
           >
             <input
               id="myInput"
@@ -523,15 +447,6 @@ class Dashboard extends Component {
               Reminder
             </div>
             <Divider />
-            {/* <div
-              className="sidebar_component"
-              data="editlable"
-              onClick={this.changeMainContainer}
-            >
-            
-              <EditIcon />
-              Edit Lable
-            </div> */}
             <LableSideBar containerRenderLable={this.containerRenderLable} />
             <Divider />
             <div
@@ -644,20 +559,16 @@ class Dashboard extends Component {
                           />
                         </div>
                       </div>
-
                       <div
                         className="addReminderMain"
                         style={{ display: this.state.reminderDisplay }}
                       >
-                        {/* <IconButton style={{cursor:"none"}}> */}
                         <AccessAlarmsIcon />
-                        {/* </IconButton> */}
                         {this.state.reminderMain.substring(0, 11)}
                         <IconButton value="dfdf" onClick={this.reminderClose}>
                           <HighlightOffIcon />
                         </IconButton>
                       </div>
-
                       <div className="lableInNote">
                         {this.state.labelIdList.map((e, index) => {
                           return (
@@ -672,6 +583,11 @@ class Dashboard extends Component {
                           );
                         })}
                       </div>
+                      <div className="collabAtNote">
+                        {this.state.collaborators.map(collab => {
+                          return(<div>{collab.firstName.charAt(0)}</div>)
+                        })}
+                      </div>
                     </CardContent>
                     <CardActions
                       style={{
@@ -680,96 +596,16 @@ class Dashboard extends Component {
                     >
                       <div className="cardActionsMain">
                         <div className="card_buttonsLeft">
-                          <IconButton onClick={this.remiderHandler}>
-                            <AddAlertIcon />
-                          </IconButton>
-                          <Menu
-                            className="reminderMenu"
-                            anchorOrigin={{
-                              vertical: "bottom",
-                              horizontal: "center",
-                            }}
-                            transformOrigin={{
-                              vertical: "top",
-                              horizontal: "center",
-                            }}
-                            anchorEl={this.state.reminderMenuAnchor}
-                            keepMounted
-                            open={this.state.reminderMenuOpen}
-                            onClose={this.remiderHandler}
-                          >
-                            <div
-                              style={{
-                                display: this.state.displayReminder,
-                              }}
-                            >
-                              <li className="reminderHeading">Reminder</li>
-                              <MenuItem
-                                time="0"
-                                onClick={this.setReminderOnclick}
-                              >
-                                Later today 8:00 PM
-                              </MenuItem>
-                              <MenuItem
-                                time="1"
-                                onClick={this.setReminderOnclick}
-                              >
-                                Tomorrow 8:00 AM
-                              </MenuItem>
-                              <MenuItem
-                                time="7"
-                                onClick={this.setReminderOnclick}
-                              >
-                                Next Week 8:00 AM
-                              </MenuItem>
-                              <MenuItem onClick={this.clickPickDate}>
-                                <WatchLaterIcon />
-                                Pick date & time
-                              </MenuItem>
-                            </div>
-                            <div
-                              id="datePickBox"
-                              style={{
-                                display: this.state.displayDatePick,
-                              }}
-                            >
-                              <Typography onClick={this.clickPickDate}>
-                                <ArrowBackIcon />
-                                Pick Date & Time
-                              </Typography>
-                              <TextField
-                                id="date"
-                                type="date"
-                                onChange={this.handleChangeDate}
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                              />
-                              <TextField
-                                id="standard-select-currency"
-                                select
-                                label="Time"
-                                // value={this.state.time}
-                                onChange={this.handleChangeTime}
-                                helperText="Please select your time"
-                              >
-                                {this.timing.map((option) => (
-                                  <MenuItem
-                                    key={option.value}
-                                    value={option.value}
-                                  >
-                                    {option.label}
-                                  </MenuItem>
-                                ))}
-                              </TextField>
-                              <Button onClick={this.setReminderOnclick}>
-                                Save
-                              </Button>
-                            </div>
-                          </Menu>
-                          <IconButton>
-                            <PersonAddIcon />
-                          </IconButton>
+                         
+                         <ReminderNewNote reminderMainSet={this.reminderMainSet.bind(this)}
+                                          reminderMain={this.state.reminderMain}
+                         />
+
+                           <CollaboratorNewNote data={{userData:this.state.userData,
+                                                        collaborators:this.state.collaborators,
+                                                        removeCollab:this.removeCollab.bind(this),
+                                                        addCollab:this.addCollab.bind(this)
+                            }}/>
                           <ColorBox changeColor={this.onClickChanageColor} />
                           <IconButton>
                             <AddPhotoAlternateIcon />
