@@ -5,15 +5,12 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import Divider from "@material-ui/core/Divider";
 import { searchUserByWord } from "../services/userServices";
 import InputBase from "@material-ui/core/InputBase";
 import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 export default class CollaboratorNewNote extends React.Component {
@@ -25,7 +22,8 @@ export default class CollaboratorNewNote extends React.Component {
       searchWord: "",
       listOpen: false,
       listAnchorEl: null,
-      searchedList: []
+      searchedList: [],
+      profileImage : JSON.parse(localStorage.getItem('userProfileImage')),
     };
     searchUserByWord('aaaa').then((response) =>
       this.setState({ searchedList: response.data.data.details })
@@ -76,8 +74,13 @@ export default class CollaboratorNewNote extends React.Component {
             <CardContent>
 
               <div className="collaboratorOwner">
-                <div>
-                  <IconButton>{/* <PersonAddIcon/> */}</IconButton>
+                <img
+                    src={
+                      process.env.REACT_APP_DOMAIN_URL + this.state.profileImage
+                    }
+                    onClick={this.handleClick}
+                    className="profile_logo"
+                  />
                   <div className="collaboratorDetails">
                     <Typography>
                       {this.props.data.userData.firstName +
@@ -89,7 +92,6 @@ export default class CollaboratorNewNote extends React.Component {
                       {this.props.data.userData.email}
                     </Typography>
 
-                  </div>
                 </div>
               </div>
 
