@@ -21,12 +21,12 @@ export default class AddLabelNote extends React.Component{
             labelIdListChange:props.labelIdListChange,
             instanceLabel:''
         }
-        this.getLables()
     }
     getLables =async () => {
         await getLableList().then(response => this.setState({labelList:response.data.data.details}))
     }
     handleClick = event => {
+        this.getLables()
         this.setState({
             anchorEl: event.currentTarget,
             open: !this.state.open
