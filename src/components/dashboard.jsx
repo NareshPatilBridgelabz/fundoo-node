@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
+import QueAndAns from './queAndAns'
 import { Menu, MenuItem } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -42,6 +42,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import CollaboratorNewNote from './collaboratorNewNote'
 import ReminderNewNote from './reminderNewNote'
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -77,13 +78,32 @@ class Dashboard extends Component {
       snackbarMsg:'',
       snackbarMsgType:'',
       collaborators:[],
-      userData:JSON.parse(localStorage.getItem('userDetails'))
+      userData:JSON.parse(localStorage.getItem('userDetails')),
+      singleNoteData:[]
     }
     this.userNoteRefresh();
   }
+  containerRendering = (data,renderComponent) => {
+    this.userNoteRefresh();
+    if(data){
+      this.setState({singleNoteData:data})
+    }
+    this.setState({containerRender:renderComponent})
+  }
+  displaySnackbar = (open,type,msg) => {
+    this.setState({snackbarOpen:open,snackbarMsgType:type,snackbarMsg:msg})
+  }
 
-  addCollab = (user) => {
-    this.state.collaborators.push(user)
+  addCollab = (collab) => {
+    let matched = this.state.userData.email === collab.email?true:false
+    this.state.collaborators.map(user => {
+      matched = user.email === collab.email?true:matched
+    })
+    if(matched) {
+      this.displaySnackbar(true,'info','Collaboratore already exist.')
+      return
+    }
+    this.state.collaborators.push(collab)
     this.setState({ collaborators: this.state.collaborators});
   };
   removeCollab = (CID) => {
@@ -129,7 +149,9 @@ class Dashboard extends Component {
           <Note
             key={allnote.id}
             noteData={allnote}
-            noteRefresh={this.userNoteRefresh}
+            noteRefresh={this.userNoteRefresh.bind(this)}
+            displaySnackbar={this.displaySnackbar.bind(this)}
+            containerRendering={this.containerRendering.bind(this)}
           />
         );
       }
@@ -227,9 +249,13 @@ class Dashboard extends Component {
     this.setState({ description: event.currentTarget.value });
   };
   onFocusTitle = () => {
-    // alert("sdsdsd");
     this.setState({
       noteCardBackDisplay: this.state.noteCardBackDisplay === "" ? "none" : "",
+    });
+  };
+  onTitleClickAway = () => {
+    this.setState({
+      noteCardBackDisplay: "none"
     });
   };
   onClickCheckList = () => {
@@ -283,7 +309,9 @@ class Dashboard extends Component {
         arcObj.push(<Note
             key={allnote.id}
             noteData={allnote}
-            noteRefresh={this.userNoteRefresh}
+            noteRefresh={this.userNoteRefresh.bind(this)}
+            displaySnackbar={this.displaySnackbar.bind(this)}
+            containerRendering={this.containerRendering.bind(this)}
           />)
       }
     });
@@ -295,7 +323,9 @@ class Dashboard extends Component {
           <Note
             key={allnote.id}
             noteData={allnote}
-            noteRefresh={this.userNoteRefresh}
+            noteRefresh={this.userNoteRefresh.bind(this)}
+            displaySnackbar={this.displaySnackbar.bind(this)}
+            containerRendering={this.containerRendering.bind(this)}
           />
         );
       }
@@ -307,7 +337,9 @@ class Dashboard extends Component {
           <Note
             key={allnote.id}
             noteData={allnote}
-            noteRefresh={this.userNoteRefresh}
+            noteRefresh={this.userNoteRefresh.bind(this)}
+            displaySnackbar={this.displaySnackbar.bind(this)}
+            containerRendering={this.containerRendering.bind(this)}
           />
         );
       }
@@ -315,11 +347,12 @@ class Dashboard extends Component {
     });
     return (
       <div>
-        <Snackbar open={this.state.snackbarOpen} autoHideDuration={6000} onClose={this.snackbarClose}>
+        <Snackbar open={this.state.snackbarOpen} autoHideDuration={3000} onClose={this.snackbarClose}>
           <Alert onClose={this.snackbarClose} severity= {this.state.snackbarMsgType}>
             {this.state.snackbarMsg}
           </Alert>
         </Snackbar>
+        <div >
         <div className="headerbar">
           <div className="header_left">
             <IconButton onClick={this.sidebarActive}>
@@ -477,6 +510,7 @@ class Dashboard extends Component {
             {this.state.containerRender === "createnote" ? (
               <div>
                 <div className="cardRow">
+                <ClickAwayListener onClickAway={this.onTitleClickAway}>
                   <Card style={{ backgroundColor: this.state.noteColor }}>
                     <CardContent>
                       <Typography color="textSecondary">
@@ -648,6 +682,7 @@ class Dashboard extends Component {
                       </div>
                     </CardActions>
                   </Card>
+                  </ClickAwayListener>
                 </div>
                 <div className="notes">
                   {this.state.allNotes.map((objNote) => {
@@ -656,7 +691,9 @@ class Dashboard extends Component {
                         <Note
                           key={objNote.id}
                           noteData={objNote}
-                          noteRefresh={this.userNoteRefresh}
+                          noteRefresh={this.userNoteRefresh.bind(this)}
+                          displaySnackbar={this.displaySnackbar.bind(this)}
+                          containerRendering={this.containerRendering.bind(this)}
                           noteListView={this.state.noteListView}
                           style={{ width: "40%" }}
                         />
@@ -687,7 +724,15 @@ class Dashboard extends Component {
                   </div>
                 </div>
               )
-            ) : this.state.containerRender === "reminder" ? (
+            ) : this.state.containerRender === "queAndAns" ? (
+                <div><QueAndAns noteData={this.state.singleNoteData} 
+                                                  containerRendering={this.containerRendering.bind(this)}
+                                                  userNoteRefresh={this.userNoteRefresh.bind(this)}
+                                        />
+                                        {/* <QueAndAns noteData={this.state.noteData} queAns={{onClickQueAns:this.onClickQueAns.bind(this),askedQuesion:this.state.askedQuesion}}/> */}
+
+                </div>
+              )  : this.state.containerRender === "reminder" ? (
               reminderObj.length > 0 ? (
                 <div className="notes">{reminderObj}</div>
               ) : (
@@ -713,9 +758,9 @@ class Dashboard extends Component {
         <Backdrop style={{ zIndex: 1 }} open={this.state.openBackDrop}>
           <CircularProgress color="inherit" />
         </Backdrop>
+        </div>
       </div>
     );
   }
 }
-
-export default withRouter(Dashboard);
+export default Dashboard;
