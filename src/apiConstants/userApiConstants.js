@@ -12,5 +12,7 @@ module.exports = {
     changesColorNotes:"changesColorNotes",
     archiveNotes:"archiveNotes",
     deleteForeverNotes:"deleteForeverNotes",
-    GetNoteLabelList:'getNoteLabelList'
+    GetNoteLabelList:'getNoteLabelList',
+    UploadProfileImage:'uploadProfileImage',
+    SearchUserList:'searchUserList'
 }
