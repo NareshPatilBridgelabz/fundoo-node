@@ -215,3 +215,55 @@ export async function removeCollaboratorsNotes(userID,noteID){
         return err
     }
 }
+
+export async function askQuesion(message,noteID){
+    try{
+        let data = {message:message,notesId:noteID}
+        const response = await axios.post(process.env.REACT_APP_API_URL+'questionAndAnswerNotes/addQuestionAndAnswer',data,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+
+export async function replyQuestion(message,parentID){
+    try{
+        let data = {message:message}
+        const response = await axios.post(process.env.REACT_APP_API_URL+'questionAndAnswerNotes/reply/'+parentID,data,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+
+export async function ratingQuestion(rate,parentID){
+    try{
+        let data = {rate:rate}
+        const response = await axios.post(process.env.REACT_APP_API_URL+'questionAndAnswerNotes/rate/'+parentID,data,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
+
+export async function likeQuestion(like,parentID){
+    try{
+        let data = {like:like}
+        const response = await axios.post(process.env.REACT_APP_API_URL+'questionAndAnswerNotes/like/'+parentID,data,{
+            headers: {
+                Authorization:userData.id
+        }});
+        return response
+    } catch(err){
+        return err
+    }
+}
