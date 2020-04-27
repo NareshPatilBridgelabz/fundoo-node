@@ -1,43 +1,26 @@
-import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
-import { makeStyles } from '@material-ui/core/styles'
+import React, {Component} from 'react'
+import {withRouter} from 'react-router-dom'
+import {makeStyles} from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import Link from '@material-ui/core/Link'
-import {
-  Container,
-  Card,
-  Snackbar,
-  IconButton,
-  MuiThemeProvider,
-  createMuiTheme
-} from '@material-ui/core'
+import {Container, Card, Snackbar, IconButton} from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 import Alert from '@material-ui/lab/Alert'
-// import BodyImages from 'react-body-images'
-import CloseIcon from '@material-ui/icons/Close'
 import TextField from '@material-ui/core/TextField'
-import { Row, Col } from 'react-grid-system'
 import { login } from '../services/userServices'
+import EmailIcon from '@material-ui/icons/Email';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import Grid from '@material-ui/core/Grid'
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAling: 'center',
-    color: theme.palette.text.secondary
-  }
+  // root: {   flexGrow: 1 }, paper: {   padding: theme.spacing(2),   textAling:
+  // 'center',   color: theme.palette.text.secondary }
 }))
-const theme = createMuiTheme({
-  overrides: {
-    MuiCard: {
-      root: {}
-    }
-  }
-})
 
-class Login extends Component {
-  constructor (props) {
+class Registration extends Component {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -45,58 +28,37 @@ class Login extends Component {
       Password: '',
       snackbarOpen: false,
       snackbarMessage: '',
-      alertMsgType: 'error'
+      alertMsgType: 'error',
+      advanceService: 'ADD TO CART',
+      basicService: 'ADD TO CART',
+      advanceBGcolor: "gray",
+      basicBGcolor: "gray"
+    }
+    if (this.props.location.data) {
+      console.log(this.props.location.data)
+      if (this.props.location.data.service === "advance") {
+        this.state.advanceService = "Selected"
+        this.state.advanceBGcolor = "yellowgreen"
+        this.state.basicBGcolor = "gray"
+      } else if (this.props.location.data.service === "basic") {
+        this.state.basicService = "Selected"
+        this.state.basicBGcolor = "yellowgreen"
+        this.state.advanceBGcolor = "gray"
+      }
     }
   }
-  handleChange = e =>
-    this.setState({
-      data: { ...this.state.data, [e.target.id]: e.target.value }
-    })
+
   onSubmit = () => {
     const errors = this.validate(this.state)
     // alert('Submitted')
     console.log(errors)
     console.log('PasswordAgain : ' + this.state.Email)
-    if (this.state.Firstname === '') {
-      console.log('firstname is empty')
-      this.setState({ snackbarOpen: true, snackbarMessage: 'Enter first name' })
-    } else if (this.state.Lastname === '') {
-      this.setState({ snackbarOpen: true, snackbarMessage: 'Enter last name' })
-      console.log('lastname is empty')
-    } else if (errors.email || this.state.Email === '') {
-      this.setState({
-        snackbarOpen: true,
-        snackbarMessage: 'Enter propper email-ID.   '
-      })
-    } else if (this.state.Country === '') {
-      this.setState({ snackbarOpen: true, snackbarMessage: 'Enter country ' })
-      console.log('lastname is empty')
+    if (errors.email || this.state.Email === '') {
+      this.setState({snackbarOpen: true, snackbarMessage: 'Enter propper email-ID.   '})
     } else if (this.state.Password === '') {
-      this.setState({
-        snackbarOpen: true,
-        snackbarMessage: 'Enter correct password'
-      })
+      this.setState({snackbarOpen: true, snackbarMessage: 'Enter correct password'})
       console.log('password is empty')
-    } else if (this.state.Passwordagain === '') {
-      this.setState({
-        snackbarOpen: true,
-        snackbarMessage: 'Enter same password'
-      })
-      console.log('requires same password')
     } else {
-      let formData = new FormData()
-      console.log('formaData in registration.jsx ')
-      // console.log(formData)
-      formData.append('firstName', this.state.Firstname)
-      formData.append('lastname', this.state.Lastname)
-      formData.append('email', this.state.Email)
-      formData.append('password', this.state.Password)
-      formData.append('country', this.state.Country)
-
-      // for (var [key, value] of formData.entries()) {
-      //   console.log(key, value)
-      // }
-
       let sendData = {
         email: this.state.Email,
         password: this.state.Password
@@ -105,15 +67,13 @@ class Login extends Component {
       console.log(JSON.stringify(sendData))
       login(sendData)
         .then(response => {
-          console.log('Responce : ')
-          console.log(response)
-          console.log(response.status)
           if (response.status === 200) {
             this.state.alertMsgType = 'success'
             this.setState({
               snackbarOpen: true,
               snackbarMessage: 'Login Succesfully.'
             })
+            localStorage.setItem('token', response.data.id)
             setTimeout(() => {
               this.props.history.push('/dashboard')
             }, 2000)
@@ -131,161 +91,223 @@ class Login extends Component {
 
   validate = data => {
     const errors = {}
-    if (!/([A-Z0-9a-z_-][^@])+?@[^$#<>?]+?\.[\w]{2,4}/.test(data.Email))
+    if (!/([A-Z0-9a-z_-][^@])+?@[^$#<>?]+?\.[\w]{2,4}/.test(data.Email)) 
       errors.email = 'Invalid email'
-
     return errors
   }
 
-  onchangeEmail = event => {
-    this.setState({ Email: event.target.value })
+  onchangeFirstName = event => {
+    if (/^[a-zA-Z]*$/.test(event.target.value)) {
+      this.setState({Firstname: event.target.value})
+    } else {
+      this.setState({snackbarOpen: true, snackbarMessage: 'Enter only alphabets   '})
+    }
   }
+
+  onchangeLastName = event => {
+    if (/^[a-zA-Z]*$/.test(event.target.value)) {
+      this.setState({Lastname: event.target.value})
+    } else {
+      this.setState({snackbarOpen: true, snackbarMessage: 'Enter only alphabets.   '})
+    }
+  }
+
+  onchangeEmail = event => {
+    this.setState({Email: event.target.value})
+  }
+
 
   onchangePassword = event => {
     if (event.target.value.match('^[A-Za-z0-9]*$') != null) {
       // console.log("on click function is working", event.target.value)
-      this.setState({ Password: event.target.value })
+      this.setState({Password: event.target.value})
     } else {
       // console.log("on click function is not working", event.target.value)
-      this.setState({
-        snackbarOpen: true,
-        snackbarMessage: 'enter correct password'
-      })
+      this.setState({snackbarOpen: true, snackbarMessage: 'enter correct password'})
+    }
+  }
+
+  onchangePasswordagain = async event => {
+    await this.setState({Passwordagain: event.target.value})
+    this.checkPassword()
+  }
+
+  checkPassword() {
+    if (this.state.Password === this.state.Passwordagain) {
+      this.setState({snackbarOpen: true, snackbarMessage: 'done'})
+    } else {
+      this.setState({snackbarOpen: true, snackbarMessage: 'enter same password'})
     }
   }
 
   SnackbarClose = e => {
-    this.setState({ snackbarOpen: false })
+    this.setState({snackbarOpen: false})
   }
   onChange = e => {
-    this.setState({ [e.target.name]: e.target.value })
-    console.log(this.setState({ [e.target.name]: e.target.value }))
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+    console.log(this.setState({
+      [e.target.name]: e.target.value
+    }))
   }
   handleCloseSnackbar = () => {
-    this.setState({ snackbarOpen: false })
+    this.setState({snackbarOpen: false})
   }
-  forgotPasswordPage = () => {
-    this.props.history.push('./forgotpassword')
+  loginPage = () => {
+    this
+      .props
+      .history
+      .push('/login')
   }
-  registerPage = () => {
-    this.props.history.push('./registration')
-  }
-
-  render () {
-    const classes = { useStyles }
+  render() {
+    const classes = {
+      useStyles
+    }
 
     return (
-      <div className='login_card_style'  >
-                  <div className='loginMainReg'>
-                      <form className='loginFieldContainer' onSubmit={this.onSubmit}>
-                        <h1 style = {{
-                          paddingLeft: '12px',
-                          marginBottom:'28px'
-                        }}> Login page </h1>
+      <div className="login_main">
 
-                        <Snackbar
-                          anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'center'
-                          }}
-                          open={this.state.snackbarOpen}
-                          autoHideDuration={6000}
-                          onClose={this.snackbarOpen}
-                          action={
-                            <IconButton
-                              aria-label='close'
-                              color='inherit'
-                              onClick={this.handleCloseSnackbar}
-                            >
-                              <CloseIcon />
-                            </IconButton>
-                          }
+        <Card
+          className='login_card'
+          style={{
+          boxShadow: "5px 10px 12px 1px",
+          backgroundColor: "rgb(255, 251, 251)"
+        }}>
+          <CardContent>
+            <Typography className="register_title" variant="h5" color="textSecondary">
+              <span style={{color:"red"}}>F</span>
+              <span style={{color:"blue"}}>U</span>
+              <span style={{color:"green"}}>N</span>
+              <span style={{color:"maroon"}}>D</span>
+              <span style={{color:"red"}}>O</span>
+              <span style={{color:"blue"}}>O</span>
+            </Typography>
+            <Typography className="register_title" variant="h6" color="textSecondary">
+              LOGIN
+            </Typography>
+            <Typography variant="body2" component="p">
+              <form className={classes.root} noValidate autoComplete="off" id="login_form">
+              <Snackbar
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'center'
+                        }}
+                        open={this.state.snackbarOpen}
+                        autoHideDuration={3000}
+                        onClose={() => this.setState({snackbarOpen: false})}
+                        message={
+                          <span id='message-id'>
+                            {' '}
+                            {this.state.snackbarMessage}{' '}
+                          </span>
+                        }
+                      >
+                        <Alert
+                          onClose={this.handleCloseSnackbar}
+                          severity={this.state.alertMsgType}
                         >
-                          <Alert
-                            className='alertBox'
-                            onClose={this.handleCloseSnackbar}
-                            severity={this.state.alertMsgType}
-                          >
-                            {this.state.snackbarMessage}
-                          </Alert>
-                        </Snackbar>
+                          {this.state.snackbarMessage}
+                        </Alert>
+                      </Snackbar>
+                <TextField
+                  fullWidth
+                  id="input-with-icon-textfield"
+                  label="Email"
+                  variant="outlined"
+                  value={this.state.Email}
+                  onChange={this.onchangeEmail}
+                  InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailIcon/>
+                    </InputAdornment>
+                  )
+                }}/>
+                <TextField
+                  fullWidth
+                  id="input-with-icon-textfield"
+                  label="Password"
+                  type='password'
+                  variant="outlined"
+                  value={this.state.Password}
+                  onChange={this.onchangePassword}
+                  InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <VpnKeyIcon/>
+                    </InputAdornment>
+                  )
+                }}/>
+              </form>
+            </Typography>
+          </CardContent>
 
-                        <div>
-                          <TextField
-                            required={true}
-                            id='Email'
-                            label='Email'
-                            variant='outlined'
-                            size='small'
-                            value={this.state.Email}
-                            onChange={this.onchangeEmail}
-                          />
-                        </div>
+          <div className={this.props.location.data?'login_services':'hide'}>
 
-                        <div>
-                          <TextField
-                            required={true}
-                            error={this.state.error}
-                            id='Password'
-                            label='Password'
-                            type='password'
-                            variant='outlined'
-                            size='small'
-                            value={this.state.Password}
-                            onChange={this.onchangePassword}
-                            className={classes.paper}
-                          />
-                        </div>
-
-                        <div>
-                          <div className='col s6 Reg-button'>
-                            <Button
-                              variant='outlined'
-                              size='medium'
-                              color='primary'
-                              className={classes.paper}
-                              style={{
-                                color: 'blue',
-                                margin: '10px'
-                              }}
-                              onClick={this.onSubmit}
-                            >
-                              Submit
-                            </Button>
-                          </div>
-                        </div>
-                      </form>
-                      <div className='loginCardBottom'>
-                              <div>
-                        <Link
-                          id='forgotPwdLink'
-                          component='button'
-                          variant='body2'
-                          style={{
-                            fontWeight:'bold'
-                          }}
-                          onClick={this.forgotPasswordPage}
-                        >
-                          forgot password
-                        </Link>
-                        <br />
-                        <Link
-                          component='button'
-                          variant='body2'
-                          style={{
-                            fontWeight:'bold'
-                          }}
-                          onClick={this.registerPage}
-                        >
-                          register now
-                        </Link>
-                        </div>
-                      </div>
-
+             
+                <div className='cardbox'>
+                  <div className='small_services_card front_card '>
+                    <Typography >price: $99 per month</Typography>
+                    <Typography style={{
+                      color: "blue"
+                    }}>advance</Typography>
+                    <ul className='servicecard_ul'>
+                      <li>$99/month</li>
+                      <li>
+                        Ability to add title, description, images, labels, checklist and colors
+                      </li>
+                    </ul>
                   </div>
+                  <div
+                    className='small_services_card back_card'
+                    style={{
+                    backgroundColor: this.state.advanceBGcolor
+                  }}>{this.state.advanceService}</div>
+                </div>
+
+                <div className='cardbox'>
+                  <div className='small_services_card front_card'>
+                    <Typography >price: $49 per month</Typography>
+                    <Typography style={{
+                      color: "blue"
+                    }}>basic</Typography>
+                    <ul className='servicecard_ul'>
+                      <li>$49/month</li>
+                      <li>Ability to add only title and description</li>
+                    </ul>
+                  </div>
+                  <div
+                    className='small_services_card back_card'
+                    style={{
+                    backgroundColor: this.state.basicBGcolor
+                  }}>{this.state.basicService}</div>
+                </div>
+            {/* <div className="header_footer">
+              <a href="login">click instead
+              </a>
+            </div> */}
+          </div>
+          <div className="login-btn">
+          <div className="links_left">
+              <div className='fontWeight-600 blueFont cursor' onClick={e => this.props.history.push('/forgotPassword')}>forgot Password.
+              </div>
+              <div className='fontWeight-600 blueFont cursor' onClick={e => this.props.history.push('/fundooServices')}>create Account.
+              </div>
+            </div>
+          <div className="button_right">
+          <CardActions>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={this.onSubmit}>Login</Button>
+          </CardActions>
+          </div>
+          </div>  
+        </Card>
       </div>
     )
   }
 }
 
-export default withRouter(Login)
+export default withRouter(Registration)
