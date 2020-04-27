@@ -3,6 +3,8 @@ import userApiConstants from "../apiConstants/userApiConstants";
 let userData = JSON.parse(localStorage.getItem("userDetails"))
 
 export async function getUserNote(){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
+    console.log('userData services ',userData)
     try{
         const response = await axios.get(process.env.REACT_APP_NOTES_URL + userApiConstants.getNotes, {
             headers: {
@@ -15,6 +17,7 @@ export async function getUserNote(){
 }
 
 export async function setUserNote(noteData){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.setNotes,noteData,{
             headers: {
@@ -27,6 +30,7 @@ export async function setUserNote(noteData){
 }
 
 export async function deleteRestoreUserNote(deleteRestoreData){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.deleteNote,deleteRestoreData,{
             headers: {
@@ -39,6 +43,7 @@ export async function deleteRestoreUserNote(deleteRestoreData){
 }
 
 export async function updateUserNote(editData){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.updateNotes,editData,{
             headers: {
@@ -51,6 +56,7 @@ export async function updateUserNote(editData){
 }
 
 export async function addUpdateReminderNote(addUpdateReminderdata){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.addUpdateReminderNotes,addUpdateReminderdata,{
             headers: {
@@ -63,6 +69,7 @@ export async function addUpdateReminderNote(addUpdateReminderdata){
 }
 
 export async function removeReminderNote(noteID){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         let noteData = {noteIdList: [noteID]}
         const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.removeReminderNotes,noteData,{
@@ -76,6 +83,7 @@ export async function removeReminderNote(noteID){
 }
 
 export async function changesColorNotes(colordata){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.changesColorNotes,colordata,{
             headers: {
@@ -88,6 +96,7 @@ export async function changesColorNotes(colordata){
 }
 
 export async function archiveNote(archiveData){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.archiveNotes,archiveData,{
             headers: {
@@ -99,6 +108,7 @@ export async function archiveNote(archiveData){
     }
 }
 export async function deleteNoteForever(noteId){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.post(process.env.REACT_APP_NOTES_URL + userApiConstants.deleteForeverNotes,noteId,{
             headers: {
@@ -110,6 +120,7 @@ export async function deleteNoteForever(noteId){
     }
 }
 export async function getLableList(){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.get(process.env.REACT_APP_NOTES_LABLE+'/'+userApiConstants.GetNoteLabelList,{
             headers: {
@@ -121,6 +132,7 @@ export async function getLableList(){
     }
 }
 export async function addNotelable(label){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         let lableData = {label:label,isDeleted:false,userId:userData.userId}
         const response = await axios.post(process.env.REACT_APP_NOTES_LABLE,lableData,{
@@ -133,6 +145,7 @@ export async function addNotelable(label){
     }
 }
 export async function deleteNotelable(labelId){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.delete(process.env.REACT_APP_NOTES_LABLE+'/'+labelId+'/deleteNoteLabel',{
             headers: {
@@ -144,6 +157,7 @@ export async function deleteNotelable(labelId){
     }
 }
 export async function updateNoteLabel(labelId,editLabel){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.post(process.env.REACT_APP_NOTES_LABLE+'/'+labelId+'/updateNoteLabel',editLabel,{
             headers: {
@@ -156,6 +170,7 @@ export async function updateNoteLabel(labelId,editLabel){
 }
 
 export async function removeNoteLabel(lableId,noteId){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         let data = {}
         const response = await axios.post(process.env.REACT_APP_API_URL+'notes/'+noteId+'/addLabelToNotes/'+lableId+'/remove',data,{
@@ -168,6 +183,7 @@ export async function removeNoteLabel(lableId,noteId){
     }
 }
 export async function addSubNoteLabel(lableId,noteId){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         let data = {}
         const response = await axios.post(process.env.REACT_APP_API_URL+'notes/'+noteId+'/addLabelToNotes/'+lableId+'/add',data,{
@@ -180,6 +196,7 @@ export async function addSubNoteLabel(lableId,noteId){
     }
 }
 export async function getNotesListByLabel(label){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         let data = {}
         const response = await axios.post(process.env.REACT_APP_API_URL+'notes/getNotesListByLabel/'+label,data,{
@@ -193,6 +210,7 @@ export async function getNotesListByLabel(label){
 }
 
 export async function addcollaboratorsNotes(user,noteID){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.post(process.env.REACT_APP_NOTES_URL+noteID+'/AddcollaboratorsNotes',user,{
             headers: {
@@ -205,6 +223,7 @@ export async function addcollaboratorsNotes(user,noteID){
 }
 
 export async function removeCollaboratorsNotes(userID,noteID){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.delete(process.env.REACT_APP_NOTES_URL+noteID+'/removeCollaboratorsNotes'+'/'+userID,{
             headers: {
@@ -217,6 +236,7 @@ export async function removeCollaboratorsNotes(userID,noteID){
 }
 
 export async function askQuesion(message,noteID){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         let data = {message:message,notesId:noteID}
         const response = await axios.post(process.env.REACT_APP_API_URL+'questionAndAnswerNotes/addQuestionAndAnswer',data,{
@@ -230,6 +250,7 @@ export async function askQuesion(message,noteID){
 }
 
 export async function replyQuestion(message,parentID){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         let data = {message:message}
         const response = await axios.post(process.env.REACT_APP_API_URL+'questionAndAnswerNotes/reply/'+parentID,data,{
@@ -243,6 +264,7 @@ export async function replyQuestion(message,parentID){
 }
 
 export async function ratingQuestion(rate,parentID){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         let data = {rate:rate}
         const response = await axios.post(process.env.REACT_APP_API_URL+'questionAndAnswerNotes/rate/'+parentID,data,{
@@ -256,6 +278,7 @@ export async function ratingQuestion(rate,parentID){
 }
 
 export async function likeQuestion(like,parentID){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         let data = {like:like}
         const response = await axios.post(process.env.REACT_APP_API_URL+'questionAndAnswerNotes/like/'+parentID,data,{
