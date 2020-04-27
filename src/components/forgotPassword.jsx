@@ -103,31 +103,8 @@ class Registration extends Component {
     const classes = { useStyles }
 
     return (
-      <div className='card_style' style={{
-        
-        backgroundImage:
-          'url(https://cdn.pixabay.com/photo/2017/03/25/17/55/color-2174045__340.png)',
-        backgroundSize: '100% 100%'
-      }}>
-        <Container>
-          <Row>
-            <Col sm={4}>{/* One of three columns */}</Col>
-            <Col sm={4} style={{top:'90px'}}>
-              <Card
-                style={{
-                  display: 'flex',
-                  justifyContent: 'left-center',
-                  flexDirection: 'column',
-                  height: '40vh',
-                  boxShadow: '0px 0px 10px 2px',
-                  marginTop: '100px',
-                  paddingBottom: '10px',
-                  backgroundImage:
-                    'url(https://image.freepik.com/free-vector/elegant-white-background-with-shiny-lines_1017-17580.jpg)',
-                  backgroundSize: '150% 150%'
-                }}
-              >
-                <div className='mainReg'>
+      <div className='register_card_style'>
+                <div className='mainRegForgot'>
                   <div maxWidth='5px' fixed>
                     <form className='formApi' onSubmit={this.onSubmit}>
                     <h1>Forgotpassword </h1>
@@ -158,7 +135,7 @@ class Registration extends Component {
                       <div style={{marginTop: '50px'}}>
                         <TextField
                           required={true}
-                          id='Email'
+                          id='email'
                           label='Email'
                           variant='outlined'
                           size='small'
@@ -187,7 +164,7 @@ class Registration extends Component {
                          
                       </div>
                     </form>
-                    <div className='cardBottom'>
+                    <div className='forgot_cardBottom'>
                         <Link
                           id='forgotPwdLink'
                           component='button'
@@ -203,13 +180,9 @@ class Registration extends Component {
                       </div>
                   </div>
                 </div>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
       </div>
     )
   }
 }
 
-export default withRouter(Registration)
+export default Registration
