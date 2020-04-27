@@ -14,5 +14,6 @@ module.exports = {
     deleteForeverNotes:"deleteForeverNotes",
     GetNoteLabelList:'getNoteLabelList',
     UploadProfileImage:'uploadProfileImage',
-    SearchUserList:'searchUserList'
+    SearchUserList:'searchUserList',
+    Productcarts:'productcarts'
 }
