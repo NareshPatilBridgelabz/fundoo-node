@@ -88,19 +88,19 @@ class Notes extends React.Component {
   timing = [
     {
       value: "morning8:00AM",
-      label: "morning     8:00 AM",
+      label: "morning8:00AM",
     },
     {
       value: "afternoon1:00PM",
-      label: "afternoon   1:00 PM",
+      label: "afternoon1:00PM",
     },
     {
       value: "evening4:00PM",
-      label: "evening     4:00 PM",
+      label: "evening4:00PM",
     },
     {
       value: "night8:00PM",
-      label: "night       8:00 PM",
+      label: "night8:00PM",
     },
   ];
   remiderHandler = (event) => {
@@ -388,13 +388,16 @@ class Notes extends React.Component {
                         }}
                       />
                       <TextField
-                        id="standard-select-currency"
+                        id={this.state.noteData.id}
                         select
                         label="Time"
                         // value={this.state.time}
                         onChange={this.handleChangeTime}
                         helperText="Please select your time"
                       >
+                        <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
                         {this.timing.map((option) => (
                           <MenuItem key={option.value} value={option.value}>
                             {option.label}
@@ -471,7 +474,7 @@ class Notes extends React.Component {
                           onClick={(e) => {
                             this.props.containerRendering(this.state.noteData,'queAndAns');
                           }}
-                        > Ask Question</MenuItem>
+                        > {this.state.askedQuesion?'Show Question':'Ask Question'}</MenuItem>
                       </div>
                     )}
                   </Menu>
@@ -593,13 +596,16 @@ class Notes extends React.Component {
                             }}
                           />
                           <TextField
-                            id="standard-select-currency"
+                            id={this.state.noteData.id}
                             select
                             label="Time"
                             // value={this.state.time}
                             onChange={this.handleChangeTime}
                             helperText="Please select your time"
                           >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
                             {this.timing.map((option) => (
                               <MenuItem key={option.value} value={option.value}>
                                 {option.label}
