@@ -5,6 +5,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import { EditorState } from 'draft-js'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
+import ThumbDownAltIcon from '@material-ui/icons/ThumbDownAlt';
 import UndoIcon from '@material-ui/icons/Undo';
 import {askQuesion} from '../services/noteServices'
 import StarBorderIcon from '@material-ui/icons/StarBorder';
@@ -26,7 +27,8 @@ export default class QueAndAns extends React.Component {
         reply:false,
         parentId:'',
         rating: 0,
-        like:''
+        like:'',
+        replyList:[]
     }
   }
   componentWillMount = () => {
@@ -49,6 +51,7 @@ export default class QueAndAns extends React.Component {
       this.setState({question:true})
       this.setState({editorState: EditorState.createEmpty()})
     })
+    this.props.userNoteRefresh()
   }
   clickShowMsgHideEditor = () => {
     if(this.props.noteData.questionAndAnswerNotes.length > 0){
@@ -60,17 +63,44 @@ export default class QueAndAns extends React.Component {
       }
       if(this.props.noteData.questionAndAnswerNotes[0].like.length > 0){
         this.setState({like:this.props.noteData.questionAndAnswerNotes[0].like[0].like})
-      }
+      } 
+      this.setState({replyList:this.props.noteData.questionAndAnswerNotes})
       this.setState({question:true})
     }
   }
   replyOfAnswer = () => {
-    replyQuestion(this.state.editorState.getCurrentContent().getPlainText('\u0001'),this.state.parentId)
+    replyQuestion(this.state.editorState.getCurrentContent().getPlainText('\u0001'),this.state.parentId).then(res => {
+      this.state.replyList.push(res.data.data.details)
+      this.setState({replyList:this.state.replyList})
+      this.setState({editorState: EditorState.createEmpty()})
+    })
     this.setState({reply:!this.state.reply})
   }
   likeQuestion = () => {
     likeQuestion(!this.state.like,this.state.parentId).then(res => {
       this.setState({like:!this.state.like})
+    })
+  }
+  likeReply(likeDt,replyId){
+    likeQuestion(likeDt,replyId).then(res => {
+      let replyFilList = this.state.replyList.map(reply => {
+        if(reply.id === replyId){
+          if(reply.like.length){
+            let dt = Object.assign({},reply,{
+              like:[{userId: reply.id, like: likeDt}]
+            })
+            return dt
+          }else{
+            let dt = Object.assign({},reply,{
+              like: [{userId: replyId, like: likeDt}]
+            })
+            return dt
+          }
+        }else{
+          return reply
+        }
+      })
+      this.setState({replyList:replyFilList})
     })
   }
   render() {
@@ -120,7 +150,10 @@ export default class QueAndAns extends React.Component {
                   <UndoIcon />
                 </IconButton>
                 <IconButton onClick={this.likeQuestion}>
-                  <ThumbUpAltIcon color={this.state.like?'primary':'default'} />
+                  {this.state.like?<ThumbUpAltIcon color='primary'/>:<ThumbUpAltIcon />}
+                </IconButton>
+                <IconButton onClick={this.likeQuestion}>
+                  {this.state.like?<ThumbDownAltIcon />:<ThumbDownAltIcon color='primary'/>}
                 </IconButton>
                 <RatingStart rate={{rating:this.state.rating,onChnageRating:this.onChnageRating.bind(this)}}/>
                 
@@ -130,6 +163,36 @@ export default class QueAndAns extends React.Component {
               <Typography variant='h5'>{this.state.questionMsg}</Typography>
             </div>
           </div>
+          {this.state.replyList.map(reply => {
+            return (<div className={this.state.question?'show margin-20px':'hide'}>
+              <Divider />
+              <div className='replyHeader'>
+                <div>
+                  <h5>{new Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(new Date(reply.createdDate))}</h5>
+                </div>
+                <div className='ratingRight'>
+                  {/* <IconButton onClick={e => this.setState({reply:!this.state.reply})}>
+                    <UndoIcon />
+                  </IconButton> */}
+                  <IconButton onClick={e => this.likeReply(reply.like.length?!reply.like[0].like:true,reply.id)}>
+                    {reply.like.length?reply.like[0].like?<ThumbUpAltIcon color='primary'/>:<ThumbUpAltIcon />:<ThumbUpAltIcon />}
+                  </IconButton>
+                  <IconButton onClick={e => this.likeReply(reply.like.length?!reply.like[0].like:true,reply.id)}>
+                    {reply.like.length?reply.like[0].like?<ThumbDownAltIcon />:<ThumbDownAltIcon color='primary'/>:<ThumbDownAltIcon />}
+                  </IconButton>
+
+                  {/* <IconButton onClick={e => this.likeReply(reply.like.length?!reply.like[0].like:true,reply.id)}>
+                    <ThumbUpAltIcon color={this.state.like?'primary':'default'} />
+                  </IconButton> */}
+                  {/* <RatingStart rate={{rating:this.state.rating,onChnageRating:this.onChnageRating.bind(this)}}/> */}
+                  
+                </div>
+              </div>
+              <div className='replyList'>
+                <Typography variant='h5'>{reply.message}</Typography>
+              </div>
+            </div>)
+          })}
           <Divider/>
           <div className={this.state.reply?'show margin-20px':'hide'} >
             <Editor
