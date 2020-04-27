@@ -43,6 +43,8 @@ import Alert from '@material-ui/lab/Alert';
 import CollaboratorNewNote from './collaboratorNewNote'
 import ReminderNewNote from './reminderNewNote'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import Cart from './cart'
 
 class Dashboard extends Component {
   constructor(props) {
@@ -81,11 +83,14 @@ class Dashboard extends Component {
       userData:JSON.parse(localStorage.getItem('userDetails')),
       singleNoteData:[]
     }
+    
+  }
+  componentWillMount = () => {
     this.userNoteRefresh();
   }
   containerRendering = (data,renderComponent) => {
-    this.userNoteRefresh();
     if(data){
+      this.userNoteRefresh();
       this.setState({singleNoteData:data})
     }
     this.setState({containerRender:renderComponent})
@@ -170,15 +175,16 @@ class Dashboard extends Component {
     this.state.containerRender = event.target.getAttribute("data");
     this.setState({ containerRender: this.state.containerRender });
   };
-  userNoteRefresh = () => {
-    this.setState({openBackDrop:TextTrackCue})
-    getUserNote().then((response) => {
+  userNoteRefresh = async () => {
+    // this.setState({openBackDrop:TextTrackCue})
+    await getUserNote().then((response) => {
       if (response.data.data.data) {
         this.setState({openBackDrop:false})
         this.setState({ allNotes: response.data.data.data });
         this.setState({ allNotesTemp: response.data.data.data });
       }
     });
+    console.log(this.state.allNotes)
   };
   handleClick = (event) => {
     this.setState({
@@ -239,6 +245,7 @@ class Dashboard extends Component {
       this.setState({ diplayCheckBox: "none" })
       this.setState({ noteColor: "" })
       this.setState({ labelIdList: [] })
+      this.setState({ collaborators: [] })
       //for close the main Note Box
     }
   };
@@ -276,6 +283,7 @@ class Dashboard extends Component {
       let listData = { itemName: this.state.listMain, status: "open" };
       this.state.list.push(listData);
       this.setState({ listMain: "" });
+      return
     }
     if (event.target.value) {
       this.setState({ listMain: event.target.value });
@@ -312,6 +320,7 @@ class Dashboard extends Component {
             noteRefresh={this.userNoteRefresh.bind(this)}
             displaySnackbar={this.displaySnackbar.bind(this)}
             containerRendering={this.containerRendering.bind(this)}
+            noteListView={this.state.noteListView}
           />)
       }
     });
@@ -326,6 +335,7 @@ class Dashboard extends Component {
             noteRefresh={this.userNoteRefresh.bind(this)}
             displaySnackbar={this.displaySnackbar.bind(this)}
             containerRendering={this.containerRendering.bind(this)}
+            noteListView={this.state.noteListView}
           />
         );
       }
@@ -340,6 +350,7 @@ class Dashboard extends Component {
             noteRefresh={this.userNoteRefresh.bind(this)}
             displaySnackbar={this.displaySnackbar.bind(this)}
             containerRendering={this.containerRendering.bind(this)}
+            noteListView={this.state.noteListView}
           />
         );
       }
@@ -366,7 +377,7 @@ class Dashboard extends Component {
               <img src="https://www.gstatic.com/images/branding/product/1x/keep_48dp.png" />
             )}
           </div>
-          <div className="searchBox">
+          <div className={this.state.containerRender !== "queAndAns"?"searchBox":'hide'}>
             <Card id="searchbar">
               <Tooltip title="search">
                 <IconButton>
@@ -381,7 +392,7 @@ class Dashboard extends Component {
               />
             </Card>
           </div>
-          <div className="buttonBundle1">
+          <div className={this.state.containerRender !== "queAndAns"?"buttonBundle1":'hide'}>
             <IconButton
               className="searchButton2"
               onClick={this.searchBarHandel}
@@ -390,6 +401,9 @@ class Dashboard extends Component {
             </IconButton>
             <IconButton onClick={this.userNoteRefresh}>
               <RefreshIcon />
+            </IconButton>
+            <IconButton onClick={e => this.containerRendering(null,'cart')}>
+              <ShoppingCartIcon />
             </IconButton>
             <IconButton className="hideIcon" onClick={this.changeNoteListView}>
               {this.state.noteListView ? (
@@ -510,7 +524,6 @@ class Dashboard extends Component {
             {this.state.containerRender === "createnote" ? (
               <div>
                 <div className="cardRow">
-                <ClickAwayListener onClickAway={this.onTitleClickAway}>
                   <Card style={{ backgroundColor: this.state.noteColor }}>
                     <CardContent>
                       <Typography color="textSecondary">
@@ -682,8 +695,9 @@ class Dashboard extends Component {
                       </div>
                     </CardActions>
                   </Card>
-                  </ClickAwayListener>
                 </div>
+
+                <div className='notes_container'> 
                 <div className="notes">
                   {this.state.allNotes.map((objNote) => {
                     if (!objNote.isDeleted && !objNote.isArchived) {
@@ -700,6 +714,7 @@ class Dashboard extends Component {
                       );
                     }
                   })}
+                </div>
                 </div>
               </div>
             ) : this.state.containerRender === "archive" ? (
@@ -724,6 +739,8 @@ class Dashboard extends Component {
                   </div>
                 </div>
               )
+            ) : this.state.containerRender === "cart" ? (
+                <Cart displaySnackbar={this.displaySnackbar.bind(this)}/>
             ) : this.state.containerRender === "queAndAns" ? (
                 <div><QueAndAns noteData={this.state.singleNoteData} 
                                                   containerRendering={this.containerRendering.bind(this)}
