@@ -1,5 +1,31 @@
+/* manual style */
+.hide{
+  display: none;
+}
+.show{
+  display: block;
+}
+.fontWeight-600{
+  font-weight: 600;
+}
+.blueFont{
+  color: #3f51b5;
+}
+.cursor{
+  cursor: pointer;
+}
+
+
 .mainReg{
   background-image: url(https://images.wallpapersden.com/image/download/mix-colour-background_64813_3840x2160.jpg);
+  background-size: cover;
+  box-shadow: 2px 1px 7px 1px;
+  border-radius: 10px;
+  margin-top: 70px;
+  margin-right: 30px;
+}
+.mainRegForgot{
+  background-color: beige;
   background-size: cover;
   box-shadow: 2px 1px 7px 1px;
   border-radius: 10px;
@@ -90,7 +116,7 @@
 }
 
 .sidebar {
-  height: 100%;
+  height: 600px;
   width: 20%;
   position: absolute;
   transition: 1s;
@@ -112,7 +138,7 @@
 }
 
 .sidebar_component>* {
-  padding-right: 30px;
+  padding-right: 18px;
 }
 
 .sidebar_component:hover {
@@ -203,10 +229,6 @@ h2 {
     align-items: flex-end;
 }
 
-.cardbox {
-  margin: 10px 0px 20px 100px;
-  cursor: pointer;
-}
 
 #card1:hover{
   margin: 0px 0px 20px 80px;
@@ -269,10 +291,218 @@ h2 {
   top: 0;
   left: 0;
 }
+.register_card_style{
+  /* Set rules to fill background */
+  min-height: 100%;
+  min-width: 1024px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url(https://cdn.pixabay.com/photo/2017/03/25/17/55/color-2174045__340.png);
+	background-size: 100% 100%;
+  /* Set up proportionate scaling */
+  width: 100%;
+  height: auto;
+	
+  /* Set up positioning */
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+.card_container{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-flow: wrap;
+}
+.register_services{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+
+/* fundoo services */
+.reg_main {
+  display: flex;
+    justify-content: center;
+    flex-direction: row;
+    height: -webkit-fill-available;
+    align-items: center;
+    height: auto;
+}
+.reg_card{
+  width: 60%;
+  margin: 100px;
+}
+
+/* Registration */
+.form_row{
+  /* width: 100%; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px;
+}
+.form_row .MuiFormControl-root{
+  /* margin-right: 30px;
+  margin-bottom: 20px; */
+  width: 48%;
+}
+#register_email{
+  width: 100%;
+}
+
+.MuiTypography-root.register_title{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-weight: 900;
+}
+
+/* Fundoo Sevices */
+
+.fundoo_header {
+  background-color: rgba(255, 255, 0, 0.644);
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+    top: 0px;
+    z-index: 986;
+    background-color: yellow;
+}
+
+.fundoo_content {
+  /* padding-left: 20%; */
+  font-size: 25px;
+}
+
+h2 {
+  display: flex;
+  justify-content: center;
+  margin-top: 90px;
+}
+
+.services_card {
+  width: 217px;
+  height: 223px;
+  justify-content: center;
+  padding: 23px;
+}
+
+.front_card {
+  background-color: whitesmoke;
+  position: relative;
+  z-index: 3;
+  border-radius: 5px;
+  box-shadow: 12px 15px 20px -13px;
+}
+
+.back_card {
+  background-color: gray;
+  margin-left: 29px;
+  margin-top: -210px;
+  position: relative;
+  z-index: 2;
+  border-radius: 5px;
+  box-shadow: 12px 15px 20px -13px;
+  display: flex;
+    align-items: flex-end;
+}
+
+.cardbox {
+  /* margin: 10px 0px 20px 100px; */
+  cursor: pointer;
+}
+
+#card1:hover{
+  margin: 0px 0px 20px 80px;
+}
+#card1:hover{
+  margin: 0px 0px 20px 80px;
+}
+#card1:hover > .back_card{
+  background-color: yellowgreen;
+}
+#card2:hover{
+  margin: 0px 0px 20px 80px;
+}
+#card2:hover > .back_card{
+  background-color: yellowgreen;
+}
+.servicecard_ul>li {
+  margin: 10px;
+}
+.header_footer{
+  width: 100%;
+  height: 50px;
+  text-align-last: center;
+  padding-top: 20px;
+}
+
+/* LOGIN */
+.login_main {
+  display: flex;
+    justify-content: center;
+    flex-direction: row;
+    margin-top: 50px;
+    align-items: center;
+}
+.login_services{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+/* Small Card */
+.small_services_card {
+  width: 150px;
+  height: 204px;
+  font-size: small;
+  justify-content: center;
+  padding: 15px;
+}
+.small_services_card.back_card{
+  margin-top: -190px;
+}
+#login_form > *{
+  margin-top: 20px;
+}
+.login-btn{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px;
+}
+.links_left {
+  width: 50%;
+  margin-left: 21px;
+  display: flex;
+  flex-direction: column;
+}
+.links_left > *{
+  margin-bottom: 10px;
+}
+.button_right {
+  width: 50%;    
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 10px;
+}
+
 .loginCardBottom{
   float: right;
   margin-right: 10px;
   margin-bottom: 20px;
+}
+.forgot_cardBottom{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin :10px;
 }
 .cardBottom > *{
   margin: 10px;
@@ -286,7 +516,7 @@ h2 {
 }
 .cardRow > .MuiPaper-root{
   width: 50%;
-  box-shadow: 1px 1px 3px 1px;
+  box-shadow: 0px 0px 7px 0px;
 }
 .cardRow p.MuiTypography-root.MuiTypography-body1.MuiTypography-colorTextSecondary{
   display: flex;
@@ -345,10 +575,17 @@ h2 {
   display: flex;
   flex-flow: wrap;
   margin-top: 30px;
-  justify-content: center;
+  /* min-width: 750px; */
+  max-width: 906px;
+}
+.notes_container{
+  display: flex;
+  align-items: center;
+  place-content: stretch center;
 }
 .notes > * {
-  margin: 15px;
+  margin: 0px 10px 20px 20px;
+  width: min-content;
 }
 #checkList{
   float: right;
@@ -384,7 +621,7 @@ h2 {
   justify-content: space-evenly;
 }
 .cardRow .MuiCardContent-root{
-  padding: 10px;
+  padding: 10px 10px 0px 10px;
 }
 .cardRow .MuiInputBase-input{
   font-weight: 600;
@@ -403,13 +640,25 @@ h2 {
     width: 65%;
     background-color: antiquewhite;
     border-radius: 22px 22px 22px 22px;
+    margin-bottom: 12px;
 }
 .list_ul{
   list-style: none;
+  width: 72%;
+  display: flex;
+  flex-direction: column;
+  margin: 0px;
+  padding: 0px;
 }
 
 .list_ul > * {
   height: 25px;
+  display: flex;
+  align-items: center;
+  background-color: darkgoldenrod;
+  width: fit-content;
+  border-radius: 15px;
+  margin-bottom: 5px;
 }
 .listMainInput{
   display: flex;
@@ -433,6 +682,7 @@ h2 {
 .addReminderMain{
   font-size: x-small;
   height: 30px;
+  margin-top: 10px;
 }
 .addReminderMain .MuiSvgIcon-root {
   font-size: medium;
@@ -530,7 +780,7 @@ h2 {
 .lableInNote{
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  margin-bottom: 12px;
 }
 .lableInNote > *{
   display: flex;
@@ -678,12 +928,7 @@ h2 {
 .noteQuesionHide{
   display: none;
 }
-.hide{
-  display: none;
-}
-.show{
-  display: block;
-}
+
 #editorDialog{
   width: 900px;
 }
@@ -693,9 +938,6 @@ h2 {
 #askBtn{
   display: flex;
   flex-direction: row-reverse;
-}
-.fontWeight-600{
-  font-weight: 600;
 }
 .queAndAnsNoteData{
   margin:10px
@@ -710,4 +952,111 @@ h2 {
 }
 .margin-20px{
   margin: 20px;
+}
+.replyHeader{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 10px;
+}
+.replyList{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 10px;
+}
+.shopping_cart{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+.shopping_address{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.shopping_cart_service{
+  background-color: gray;
+  border-radius: 10px;
+  padding: 10px;
+  width: fit-content;
+}
+.shopping_cart > *{
+  margin: 10px;
+  font-size: small;
+}
+.shopping_cart_buleFont{
+  color:#00a1ff
+}
+.service_card_subtotal{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border: solid 1px;
+  padding: 10px;
+}
+.service_card_subtotal > * {
+  margin-bottom: 10px;
+}
+@media (max-width:768px) {
+  .service_card_subtotal{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .shopping_cart_service_main{
+    min-width: 100%;
+  }
+  .service_card_subtotal_media{
+    min-width: 100%;
+  }
+}
+.MuiStep-root.MuiStep-horizontal .MuiStepIcon-active{
+  display: none;
+}
+.orderPlaced{
+  background-color: greenyellow;
+  padding: 10px;
+  border-radius: 5px;
+}
+.cart_container .MuiStepLabel-root{
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.cart_container .MuiStepLabel-root > *{
+  margin-top: 10px
+}
+.cart_container .MuiStepLabel-active {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.cart_container .MuiStepLabel-active > *{
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cart_container{
+  max-width: 700px;
+}
+.cart_stteper{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.cart_stteper > *{
+  width: 85%;
+}
+.cart_stteper > span{
+  width:15%;
+  background-color: cadetblue;
+  border-radius: 12px;
+  padding: 10px;
 }
