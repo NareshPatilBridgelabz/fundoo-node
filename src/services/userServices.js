@@ -1,8 +1,8 @@
 import axios from "axios";
 import userApiConstants from "../apiConstants/userApiConstants";
-let userData = JSON.parse(localStorage.getItem("userDetails"))
 
 export async function getUserData(){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.get(process.env.REACT_APP_API_URL+'user');
         return response;
@@ -12,6 +12,7 @@ export async function getUserData(){
 }
 
 export async function searchUserByWord(data){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         let sendData = {searchWord:data}
         const response = await axios.post(process.env.REACT_APP_BASE_URL+ userApiConstants.SearchUserList,sendData,{
@@ -25,6 +26,7 @@ export async function searchUserByWord(data){
 }
 
 export async function register(registerData){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.post(process.env.REACT_APP_BASE_URL + userApiConstants.singUp, registerData);
         return response;
@@ -34,11 +36,12 @@ export async function register(registerData){
 }
 
 export async function login(loginData){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.post(process.env.REACT_APP_BASE_URL + userApiConstants.login, loginData);
+        console.log('login response : ',response.data)
         localStorage.setItem('token', response.data.id)
         localStorage.setItem('userDetails', JSON.stringify(response.data))
-        localStorage.setItem('userProfileImage', JSON.stringify(response.data.imageUrl))
         return response;
     } catch(err) {
         console.log(err);
@@ -47,6 +50,7 @@ export async function login(loginData){
 }
 
 export async function dashboard(){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.post(process.env.REACT_APP_BASE_URL + userApiConstants.dashboard)
         return response;
@@ -57,6 +61,7 @@ export async function dashboard(){
 }
 
 export async function forgotPassword(data){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.post(process.env.REACT_APP_BASE_URL + userApiConstants.forgotPassword,data);
         return response;
@@ -66,6 +71,7 @@ export async function forgotPassword(data){
 }
 
 export async function uploadUserProfile(data){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
     try{
         const response = await axios.post(process.env.REACT_APP_BASE_URL + userApiConstants.UploadProfileImage,data,{
             headers: {
@@ -73,6 +79,37 @@ export async function uploadUserProfile(data){
         }});
         return response;
     } catch (err){
+        return err;
+    }
+}
+
+export async function myCart(){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
+    try{
+        const response = await axios.get(process.env.REACT_APP_API_URL + userApiConstants.Productcarts + '/myCart', {
+            headers: {
+                Authorization:userData.id
+            }
+        })
+        return response;
+    }
+    catch(err) {
+        return err;
+    }
+}
+
+export async function placeOrder(cartId,address){
+    let userData = JSON.parse(localStorage.getItem("userDetails"))
+    try{
+        const data = {cartId:cartId,address:address}
+        const response = await axios.post(process.env.REACT_APP_API_URL + userApiConstants.Productcarts + '/placeOrder',data, {
+            headers: {
+                Authorization:userData.id
+            }
+        })
+        return response;
+    }
+    catch(err) {
         return err;
     }
 }
