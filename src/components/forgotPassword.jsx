@@ -34,8 +34,6 @@ class Registration extends Component {
   
   onSubmit = () => {
     const errors = this.validate(this.state)
-    // alert('Submitted')
-    console.log(errors)
     if (errors.email || this.state.Email === '') {
       this.setState({
         snackbarOpen: true,
@@ -46,20 +44,6 @@ class Registration extends Component {
         email: this.state.Email
       }
       
-      console.log(JSON.stringify(sendData));
-    //   register(sendData)
-    //     .then(response => {
-    //         this.state.alertMsgType = 'success'
-    //         this.setState({
-    //           snackbarOpen: true,
-    //           snackbarMessage: "Succefully Registered."
-    //         })
-    //         setTimeout(() => {
-    //           this.loginPage();
-    //         }, 2000)
-    //         console.log('RESPONSE :', response);
-    //     })
-    //     .catch()
       forgotPassword(sendData)
         .then(response => {
             this.state.alertMsgType = 'success'
@@ -89,10 +73,6 @@ class Registration extends Component {
   SnackbarClose = e => {
     this.setState({ snackbarOpen: false })
   }
-//   onChange = e => {
-//     this.setState({ [e.target.name]: e.target.value })
-//     console.log(this.setState({ [e.target.name]: e.target.value }))
-//   }
   handleCloseSnackbar = () => {
     this.setState({ snackbarOpen: false })
   }
