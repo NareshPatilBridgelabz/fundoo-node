@@ -122,7 +122,6 @@ class Dashboard extends Component {
     this.setState({searchNote:e.target.value})
     let filterSearch = [] 
      this.state.allNotesTemp.map((allnote) => {
-      console.log(allnote.title,)
       if (!allnote.isDeleted && (allnote.title.startsWith(e.target.value) || allnote.description.startsWith(e.target.value))) {
         filterSearch.push(allnote)
       }
@@ -167,7 +166,6 @@ class Dashboard extends Component {
     this.setState({labelIdList:this.state.labelIdList})
   }
   labelIdListRemove = (index) => {
-    console.log("Remove List")
     this.state.labelIdList.splice(index,1)
     this.setState({labelIdList:this.state.labelIdList})
   }
@@ -184,7 +182,6 @@ class Dashboard extends Component {
         this.setState({ allNotesTemp: response.data.data.data });
       }
     });
-    console.log(this.state.allNotes)
   };
   handleClick = (event) => {
     this.setState({
@@ -196,13 +193,13 @@ class Dashboard extends Component {
     this.setState({
       sideBarOpen: !this.state.sideBarOpen,
     });
-    if (this.state.sideBarOpen) {
-      this.setState({ sidebarLeft: "0%" });
-      this.setState({ mainContainer: "80%" });
-    } else {
-      this.setState({ sidebarLeft: "-20%" });
-      this.setState({ mainContainer: "100%" });
-    }
+    // if (this.state.sideBarOpen) {
+    //   this.setState({ sidebarLeft: "0px" });
+    //   this.setState({ mainContainer: "80%" });
+    // } else {
+    //   this.setState({ sidebarLeft: "-20%" });
+    //   this.setState({ mainContainer: "100%" });
+    // }
   };
   handleLogout = () => {
     localStorage.removeItem("token");
@@ -472,10 +469,11 @@ class Dashboard extends Component {
         </div>
         <div className="dashboard_body">
           <div
-            className="sidebar"
-            style={{
-              left: this.state.sidebarLeft,
-            }}
+            className={this.state.sideBarOpen?'sidebar':'sidebar hideSidebar'}
+            // className="sidebar"
+            // style={{
+            //   left: this.state.sidebarLeft,
+            // }}
           >
             <div
               className="sidebar_component"
@@ -516,10 +514,11 @@ class Dashboard extends Component {
 
           {/* CONDITIONAL RENDERING */}
           <div
-            className="dashboard_container"
-            style={{
-              width: this.state.mainContainer,
-            }}
+          className={this.state.sideBarOpen?'dashboard_container':'dashboard_container full_container'}
+            // className="dashboard_container"
+            // style={{
+            //   width: this.state.mainContainer,
+            // }}
           >
             {this.state.containerRender === "createnote" ? (
               <div>
