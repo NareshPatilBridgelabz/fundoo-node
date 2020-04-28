@@ -391,13 +391,10 @@ class Notes extends React.Component {
                         id={this.state.noteData.id}
                         select
                         label="Time"
-                        // value={this.state.time}
-                        onChange={this.handleChangeTime}
+                        value='morning8:00AM'
+                        // onChange={this.handleChangeTime}
                         helperText="Please select your time"
                       >
-                        <MenuItem value="">
-                              <em>None</em>
-                            </MenuItem>
                         {this.timing.map((option) => (
                           <MenuItem key={option.value} value={option.value}>
                             {option.label}
@@ -599,13 +596,10 @@ class Notes extends React.Component {
                             id={this.state.noteData.id}
                             select
                             label="Time"
-                            // value={this.state.time}
-                            onChange={this.handleChangeTime}
+                            value='morning8:00AM'
+                            // onChange={this.handleChangeTime}
                             helperText="Please select your time"
                           >
-                            <MenuItem value="">
-                              <em>None</em>
-                            </MenuItem>
                             {this.timing.map((option) => (
                               <MenuItem key={option.value} value={option.value}>
                                 {option.label}
