@@ -40,7 +40,6 @@ class Registration extends Component {
       basicBGcolor: "gray"
     }
     if (this.props.location.data) {
-      console.log(this.props.location.data)
       if (this.props.location.data.service === "advance") {
         this.state.advanceService = "Selected"
         this.state.advanceBGcolor = "yellowgreen"
@@ -57,26 +56,23 @@ class Registration extends Component {
 
   onSubmit = () => {
     const errors = this.validate(this.state)
-    // alert('Submitted')
-    console.log(errors)
-    console.log('PasswordAgain : ' + this.state.Email)
     if (this.state.Firstname === '') {
-      console.log('firstname is empty')
+      
       this.setState({snackbarOpen: true, snackbarMessage: 'Enter first name'})
     } else if (this.state.Lastname === '') {
       this.setState({snackbarOpen: true, snackbarMessage: 'Enter last name'})
-      console.log('lastname is empty')
+      
     } else if (errors.email || this.state.Email === '') {
       this.setState({snackbarOpen: true, snackbarMessage: 'Enter propper email-ID.   '})
     } else if (this.state.Country === '') {
       this.setState({snackbarOpen: true, snackbarMessage: 'Enter country '})
-      console.log('lastname is empty')
+      
     } else if (this.state.Password === '') {
       this.setState({snackbarOpen: true, snackbarMessage: 'Enter correct password'})
-      console.log('password is empty')
+      
     } else if (this.state.Passwordagain === '') {
       this.setState({snackbarOpen: true, snackbarMessage: 'Enter same password'})
-      console.log('requires same password')
+      
     } else if (this.state.service === '') {
       this.setState({snackbarOpen: true, snackbarMessage: 'Service not selected'})
     } else {
@@ -88,7 +84,7 @@ class Registration extends Component {
         password: this.state.Password
       }
 
-      console.log(JSON.stringify(sendData));
+      
       register(sendData).then(response => {
         if(response.data){
           this.state.alertMsgType = 'success'
@@ -141,10 +137,10 @@ class Registration extends Component {
 
   onchangePassword = event => {
     if (event.target.value.match('^[A-Za-z0-9]*$') != null) {
-      // console.log("on click function is working", event.target.value)
+      // 
       this.setState({Password: event.target.value})
     } else {
-      // console.log("on click function is not working", event.target.value)
+      // 
       this.setState({snackbarOpen: true, snackbarMessage: 'enter correct password'})
     }
   }
@@ -169,9 +165,6 @@ class Registration extends Component {
     this.setState({
       [e.target.name]: e.target.value
     })
-    console.log(this.setState({
-      [e.target.name]: e.target.value
-    }))
   }
   handleCloseSnackbar = () => {
     this.setState({snackbarOpen: false})
