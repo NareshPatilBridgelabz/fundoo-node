@@ -471,9 +471,7 @@ class Dashboard extends Component {
           <div
             className={this.state.sideBarOpen?'sidebar':'sidebar hideSidebar'}
             // className="sidebar"
-            // style={{
-            //   left: this.state.sidebarLeft,
-            // }}
+            
           >
             <div
               className="sidebar_component"
