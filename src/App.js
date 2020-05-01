@@ -10,6 +10,7 @@ import Dashboard from './components/dashboard'
 import ForgotPassword from './components/forgotPassword'
 import FundooServices from './components/fundooSevices'
 import { UserProvider } from './components/userContext.js'
+import PrivateRoute from './components/privateRoute'
 
 class App extends React.Component {
   render () {
@@ -20,8 +21,8 @@ class App extends React.Component {
           
           <Route path='/registration' component={Registration} />
           <Route path='/login' component={Login} />
-          <Route path='/dashboard' component={Dashboard} />
-          <Route path='/forgotpassword' component={ForgotPassword} />
+          <PrivateRoute path='/dashboard' component={Dashboard} exact/>
+          <PrivateRoute path='/forgotpassword' component={ForgotPassword} />
           <Route path='/fundooServices' component={FundooServices} />
           
         </Switch>
