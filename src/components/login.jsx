@@ -13,13 +13,11 @@ import EmailIcon from '@material-ui/icons/Email';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import Grid from '@material-ui/core/Grid'
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { withLastLocation } from 'react-router-last-location';
 
-const useStyles = makeStyles(theme => ({
-  // root: {   flexGrow: 1 }, paper: {   padding: theme.spacing(2),   textAling:
-  // 'center',   color: theme.palette.text.secondary }
-}))
 
-class Registration extends Component {
+
+class Login extends Component {
   constructor(props) {
     super(props)
 
@@ -35,7 +33,6 @@ class Registration extends Component {
       basicBGcolor: "gray"
     }
     if (this.props.location.data) {
-      console.log(this.props.location.data)
       if (this.props.location.data.service === "advance") {
         this.state.advanceService = "Selected"
         this.state.advanceBGcolor = "yellowgreen"
@@ -50,21 +47,16 @@ class Registration extends Component {
 
   onSubmit = () => {
     const errors = this.validate(this.state)
-    // alert('Submitted')
-    console.log(errors)
-    console.log('PasswordAgain : ' + this.state.Email)
     if (errors.email || this.state.Email === '') {
       this.setState({snackbarOpen: true, snackbarMessage: 'Enter propper email-ID.   '})
     } else if (this.state.Password === '') {
       this.setState({snackbarOpen: true, snackbarMessage: 'Enter correct password'})
-      console.log('password is empty')
     } else {
       let sendData = {
         email: this.state.Email,
         password: this.state.Password
       }
 
-      console.log(JSON.stringify(sendData))
       login(sendData)
         .then(response => {
           if (response.status === 200) {
@@ -119,10 +111,8 @@ class Registration extends Component {
 
   onchangePassword = event => {
     if (event.target.value.match('^[A-Za-z0-9]*$') != null) {
-      // console.log("on click function is working", event.target.value)
       this.setState({Password: event.target.value})
     } else {
-      // console.log("on click function is not working", event.target.value)
       this.setState({snackbarOpen: true, snackbarMessage: 'enter correct password'})
     }
   }
@@ -147,9 +137,6 @@ class Registration extends Component {
     this.setState({
       [e.target.name]: e.target.value
     })
-    console.log(this.setState({
-      [e.target.name]: e.target.value
-    }))
   }
   handleCloseSnackbar = () => {
     this.setState({snackbarOpen: false})
@@ -161,9 +148,7 @@ class Registration extends Component {
       .push('/login')
   }
   render() {
-    const classes = {
-      useStyles
-    }
+    
 
     return (
       <div className="login_main">
@@ -187,7 +172,7 @@ class Registration extends Component {
               LOGIN
             </Typography>
             <Typography variant="body2" component="p">
-              <form className={classes.root} noValidate autoComplete="off" id="login_form">
+              <form noValidate autoComplete="off" id="login_form">
               <Snackbar
                         anchorOrigin={{
                           vertical: 'bottom',
@@ -310,4 +295,4 @@ class Registration extends Component {
   }
 }
 
-export default withRouter(Registration)
+export default withLastLocation(Login)
