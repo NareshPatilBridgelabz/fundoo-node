@@ -45,10 +45,14 @@ import ReminderNewNote from './reminderNewNote'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Cart from './cart'
+import { useLocation } from 'react-router-dom'
+import { useLastLocation  } from 'react-router-last-location';
+
 
 class Dashboard extends Component {
   constructor(props) {
     super(props);
+    console.log('props',props)
     this.state = {
       containerRender: "createnote",
       menuAnchor: null,
@@ -70,7 +74,7 @@ class Dashboard extends Component {
       diplayCheckBox: "none",
       isArchive: false,
       noteColor:'',
-      openBackDrop:'false',
+      openBackDrop:true,
       labelIdList:[],
       labelFilter:[],
       noteListView:true,
@@ -85,8 +89,20 @@ class Dashboard extends Component {
     }
     
   }
-  componentWillMount = () => {
-    this.userNoteRefresh();
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.location !== this.props.location) {
+      // this.setState({ prevPath: this.props.location })
+      // this.displaySnackbar(true,'info','Collaboratore already exist.')
+      console.log('previous path = ', this.props.location)
+    }
+  }
+  backDropEffect = () => {
+    this.setState({openBackDrop:!this.state.openBackDrop})
+  }
+  componentWillMount = async () => {
+    await this.userNoteRefresh();
+    // console.log(JSON.stringify(lastLocation))
+    this.displaySnackbar(true,'success','Login Successfully')
   }
   containerRendering = (data,renderComponent) => {
     if(data){
@@ -156,6 +172,7 @@ class Dashboard extends Component {
             noteRefresh={this.userNoteRefresh.bind(this)}
             displaySnackbar={this.displaySnackbar.bind(this)}
             containerRendering={this.containerRendering.bind(this)}
+            backDropEffect={this.backDropEffect.bind(this)}
           />
         );
       }
@@ -317,6 +334,7 @@ class Dashboard extends Component {
             noteRefresh={this.userNoteRefresh.bind(this)}
             displaySnackbar={this.displaySnackbar.bind(this)}
             containerRendering={this.containerRendering.bind(this)}
+            backDropEffect={this.backDropEffect.bind(this)}
             noteListView={this.state.noteListView}
           />)
       }
@@ -332,6 +350,7 @@ class Dashboard extends Component {
             noteRefresh={this.userNoteRefresh.bind(this)}
             displaySnackbar={this.displaySnackbar.bind(this)}
             containerRendering={this.containerRendering.bind(this)}
+            backDropEffect={this.backDropEffect.bind(this)}
             noteListView={this.state.noteListView}
           />
         );
@@ -347,6 +366,7 @@ class Dashboard extends Component {
             noteRefresh={this.userNoteRefresh.bind(this)}
             displaySnackbar={this.displaySnackbar.bind(this)}
             containerRendering={this.containerRendering.bind(this)}
+            backDropEffect={this.backDropEffect.bind(this)}
             noteListView={this.state.noteListView}
           />
         );
@@ -396,7 +416,9 @@ class Dashboard extends Component {
             >
               <SearchIcon />
             </IconButton>
-            <IconButton onClick={this.userNoteRefresh}>
+            <IconButton onClick={e => {this.backDropEffect();
+                                       setTimeout(() => this.userNoteRefresh(), 2000)
+                                      }}>
               <RefreshIcon />
             </IconButton>
             <IconButton onClick={e => this.containerRendering(null,'cart')}>
@@ -705,6 +727,7 @@ class Dashboard extends Component {
                           noteRefresh={this.userNoteRefresh.bind(this)}
                           displaySnackbar={this.displaySnackbar.bind(this)}
                           containerRendering={this.containerRendering.bind(this)}
+                          backDropEffect={this.backDropEffect.bind(this)}
                           noteListView={this.state.noteListView}
                           style={{ width: "40%" }}
                         />
@@ -769,7 +792,7 @@ class Dashboard extends Component {
             )}
           </div>
         </div>
-        <Backdrop style={{ zIndex: 1 }} open={this.state.openBackDrop}>
+        <Backdrop style={{ zIndex: 10000  }} open={this.state.openBackDrop}>
           <CircularProgress color="inherit" />
         </Backdrop>
         </div>
