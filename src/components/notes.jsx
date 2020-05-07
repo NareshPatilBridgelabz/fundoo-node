@@ -124,6 +124,7 @@ class Notes extends React.Component {
     this.handelNoteDialogBox();
   };
   noteDeleteRestore = (e, deleteNote) => {
+    this.props.backDropEffect()
     let deleteData = { isDeleted: deleteNote, noteIdList: [this.state.noteID] };
     deleteRestoreUserNote(deleteData).then((response) => {
       this.state.noteRefresh();
@@ -202,18 +203,21 @@ class Notes extends React.Component {
     changesColorNotes(colorData);
   };
   onClickArchive = async () => {
+    this.props.backDropEffect()
     await this.setState({ isArchive: !this.state.isArchive });
     let archiveData = {
       isArchived: this.state.isArchive,
       noteIdList: [this.state.noteID],
     };
-    archiveNote(archiveData);
-    this.state.noteRefresh();
+     archiveNote(archiveData).then( res =>  {
+                                           this.state.noteRefresh()
+                                           });
   };
   noteDeleteForever = () => {
+    this.props.backDropEffect()
     let deleteData = { noteIdList: [this.state.noteID] };
-    deleteNoteForever(deleteData);
-    this.state.noteRefresh();
+    deleteNoteForever(deleteData).then(() => this.state.noteRefresh());
+   
   };
   removeLabeFromNote = (labelId, index) => {
     this.state.noteLabels.splice(index, 1);
@@ -422,6 +426,7 @@ class Notes extends React.Component {
                   <IconButton onClick={this.moreMenuHandler}>
                     <MoreVertIcon />
                   </IconButton>
+                  <div className="subNotesMoreMenuMain">
                   <Menu
                     className="subNotesMoreMenu"
                     style={{
@@ -475,6 +480,7 @@ class Notes extends React.Component {
                       </div>
                     )}
                   </Menu>
+                  </div>
                 </div>
                 {/* <div className="card_buttonsRight">
                       <Button>

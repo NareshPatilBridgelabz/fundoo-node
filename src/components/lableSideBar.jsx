@@ -34,7 +34,6 @@ export default class LabaleSideBar extends React.Component {
   onChangeLable = (e,index) => {
     this.state.lables[index].label=e.target.value
     this.setState({lables:this.state.lables})
-    console.log(this.state.lables)
   }
   editNotelabel = (labelId,index) =>{
     let editdata = {label:this.state.lables[index].label}

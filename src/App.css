@@ -169,7 +169,7 @@
   flex-direction: row;
 }
 .dashboard_container{
-  /* transition: 1s; */
+    width: 80%;
 }
 .full_container{
   width: 100%;
@@ -594,6 +594,7 @@ h2 {
   display: flex;
   flex-flow: wrap;
   margin-top: 30px;
+  justify-content: center;
   /* min-width: 750px; */
   max-width: 906px;
 }
@@ -1067,6 +1068,9 @@ h2 {
   border-radius: 12px;
   padding: 10px;
 }
+.subNotesMoreMenu > .MuiPaper-elevation8.MuiPaper-rounded{
+  z-index: -1;
+}
 @media (max-width:768px) {
   .service_card_subtotal{
     display: flex;
@@ -1079,6 +1083,7 @@ h2 {
   }
   .service_card_subtotal_media{
     min-width: 100%;
+    margin: 0px;
   }
   .sidebar{
     width: 80%;
@@ -1137,7 +1142,7 @@ h2 {
   }
 
   .cart_container{
-    padding: 0px;
+    padding: 10px;
   }
   .cart_stteper {
     flex-flow: wrap;
@@ -1146,7 +1151,17 @@ h2 {
     margin-top: 20px;
     width: 30%;
   }
-
-
-  
+  .notes {
+    justify-content: center;
+  }
+  .notes > * {
+    margin: 0px 5px 20px 5px;
+  }
+  .cardActionsEdit .MuiSvgIcon-root{
+    font-size: medium;
+  }
+  .cardActionsEdit {
+    display: flex;
+    flex-flow: column;
+  }
 }

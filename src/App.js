@@ -20,7 +20,7 @@ class App extends React.Component {
         <Switch>
           
           <Route path='/registration' component={Registration} />
-          <Route path='/login' component={Login} />
+          <Route path='/login' component={Login} state={{ prevPath: 'login' }} />
           <PrivateRoute path='/dashboard' component={Dashboard} exact/>
           <PrivateRoute path='/forgotpassword' component={ForgotPassword} />
           <Route path='/fundooServices' component={FundooServices} />

@@ -58,8 +58,6 @@ export default class AddLabelSubNote extends React.Component{
             this.state.noteLabelList.push({label:label,id:id})
         }
         
-        // console.log(filter)
-        console.log(this.state.noteLabelList)
         this.setState({noteLabelList:this.state.noteLabelList})
         this.setState({noteLabelList:this.state.noteLabelList})
         this.state.labelIdListChange()

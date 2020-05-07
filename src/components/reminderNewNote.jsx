@@ -146,7 +146,7 @@ export default class ReminderNewNote extends React.Component{
                                 id="standard-select-currency"
                                 select
                                 label="Time"
-                                // value={this.state.time}
+                                value={'morning8:00AM'}
                                 onChange={this.handleChangeTime}
                                 helperText="Please select your time"
                               >

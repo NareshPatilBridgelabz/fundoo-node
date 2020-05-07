@@ -7,7 +7,6 @@ import ColorLensIcon from "@material-ui/icons/ColorLens";
 export default class ColorBox extends React.Component {
   constructor(props) {
     super(props)
-    console.log(props)
     this.state={
         anchorEl:null,
         open:false,

@@ -53,8 +53,6 @@ export default class AddLabelNote extends React.Component{
             this.state.noteLabelList.push({label:label,id:id})
         }
         
-        // console.log(filter)
-        console.log(this.state.noteLabelList)
         this.setState({noteLabelList:this.state.noteLabelList})
         this.setState({noteLabelList:this.state.noteLabelList})
         this.state.labelIdListChange()
@@ -65,7 +63,6 @@ export default class AddLabelNote extends React.Component{
     addInstanceLabel = () => {
         if(this.state.instanceLabel){
             addNotelable(this.state.instanceLabel).then(response => {
-                console.log(response.data)
                 this.state.noteLabelList.push({label:response.data.label,id:response.data.id})
                 this.setState({noteLabelList:this.state.noteLabelList})
                 this.setState({instanceLabel:''})

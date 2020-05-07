@@ -147,7 +147,7 @@ export default class CollaboratorNewNote extends React.Component {
                 <div className="collabSearchList">
                   {this.state.searchedList.map((user) => {
                     return (
-                      <MenuItem onClick={(e) => this.props.data.addCollab(user)}>
+                      <MenuItem key={user.id} onClick={(e) => this.props.data.addCollab(user)}>
                         <div>{user.firstName + " " + user.lastName}</div>
                         <div>{"[" + user.email + "]"}</div>
                       </MenuItem>

@@ -83,9 +83,8 @@ class Registration extends Component {
     const classes = { useStyles }
 
     return (
-      <div className='register_card_style'>
+      <div className='forgotPassword'>
                 <div className='mainRegForgot'>
-                  <div maxWidth='5px' fixed>
                     <form className='formApi' onSubmit={this.onSubmit}>
                     <h1>Forgotpassword </h1>
 
@@ -158,7 +157,6 @@ class Registration extends Component {
                         </Link>
                         
                       </div>
-                  </div>
                 </div>
       </div>
     )

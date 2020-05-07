@@ -25,7 +25,6 @@ export default class Cart extends React.Component{
             this.setState({cartID:res.data.data[0].id})
             this.setState({isOrderPlaced:res.data.data[0].isOrderPlaced})   
             this.setState({cartStepper:res.data.data[0].isOrderPlaced?2:0})   
-            console.log('cart',this.state.cartData)
         })
     }
     cartStepperChange = () => {
